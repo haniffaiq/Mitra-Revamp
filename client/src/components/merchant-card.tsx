@@ -1,4 +1,4 @@
-import { Link } from "wouter";
+import { Link, useRoute } from "wouter";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
@@ -17,11 +17,11 @@ export interface MerchantProps {
 
 export function MerchantCard({ merchant }: { merchant: MerchantProps }) {
   return (
-    <Card className="group overflow-hidden border-border/60 bg-card/50 hover:bg-card hover:shadow-xl hover:border-primary/20 transition-all duration-300">
-      <CardContent className="p-6">
+    <Card className="group overflow-hidden border-border/60 bg-card/50 hover:bg-card hover:shadow-xl hover:border-primary/20 transition-all duration-300 flex flex-col h-full">
+      <CardContent className="p-5 md:p-6 flex-1">
         <div className="flex items-start justify-between mb-6">
           <div className="relative">
-            <div className="w-16 h-16 rounded-full border-2 border-border p-1 bg-white overflow-hidden group-hover:scale-105 transition-transform duration-300">
+            <div className="w-14 h-14 md:w-16 md:h-16 rounded-full border-2 border-border p-1 bg-white overflow-hidden group-hover:scale-105 transition-transform duration-300 shrink-0">
               <img src={merchant.logo} alt={merchant.name} className="w-full h-full object-contain" />
             </div>
             {merchant.rating && (
@@ -31,14 +31,14 @@ export function MerchantCard({ merchant }: { merchant: MerchantProps }) {
               </div>
             )}
           </div>
-          <Badge variant="secondary" className="text-[10px] font-medium bg-secondary text-secondary-foreground">
+          <Badge variant="secondary" className="text-[10px] font-medium bg-secondary text-secondary-foreground whitespace-nowrap">
             {merchant.type}
           </Badge>
         </div>
 
         <div className="space-y-1 mb-4">
-          <h3 className="font-bold text-lg text-foreground group-hover:text-primary transition-colors">{merchant.name}</h3>
-          <p className="text-xs text-muted-foreground">{merchant.category}</p>
+          <h3 className="font-bold text-base md:text-lg text-foreground group-hover:text-primary transition-colors line-clamp-1">{merchant.name}</h3>
+          <p className="text-xs text-muted-foreground line-clamp-1">{merchant.category}</p>
         </div>
 
         <div className="space-y-3 bg-secondary/20 p-3 rounded-lg border border-border/30">
@@ -56,9 +56,9 @@ export function MerchantCard({ merchant }: { merchant: MerchantProps }) {
         </div>
       </CardContent>
       
-      <CardFooter className="p-4 pt-0">
+      <CardFooter className="p-4 pt-0 mt-auto">
         <Link href={`/merchant/${merchant.id}`} className="w-full">
-          <Button className="w-full bg-foreground text-background hover:bg-primary hover:text-white transition-all duration-300 shadow-sm group-hover:shadow-md">
+          <Button className="w-full bg-foreground text-background hover:bg-primary hover:text-white transition-all duration-300 shadow-sm group-hover:shadow-md text-xs md:text-sm">
             Lihat Detail Informasi
           </Button>
         </Link>

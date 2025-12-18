@@ -26,69 +26,76 @@ export default function MerchantDetail() {
       </div>
 
       <div className="container mx-auto px-4 md:px-6 pb-20">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           
           {/* Main Content (Left) */}
-          <div className="lg:col-span-8 space-y-8">
+          <div className="lg:col-span-8 space-y-6 md:space-y-8">
             
             {/* Header Card */}
-            <div className="bg-card rounded-2xl p-6 md:p-8 border border-border shadow-sm">
-              <div className="flex flex-col md:flex-row gap-6 items-start md:items-center">
-                <div className="w-24 h-24 md:w-32 md:h-32 rounded-full border-4 border-secondary p-1 bg-white shrink-0">
+            <div className="bg-card rounded-2xl p-5 md:p-8 border border-border shadow-sm">
+              <div className="flex flex-col sm:flex-row gap-5 md:gap-6 items-start sm:items-center">
+                <div className="w-20 h-20 md:w-32 md:h-32 rounded-full border-4 border-secondary p-1 bg-white shrink-0 mx-auto sm:mx-0">
                   <img src={kebabLogo} alt="Logo" className="w-full h-full object-contain" />
                 </div>
-                <div className="flex-1 space-y-2">
+                <div className="flex-1 space-y-2 w-full text-center sm:text-left">
                   <div className="flex items-center justify-between">
-                    <h1 className="text-3xl font-bold text-foreground">Kebuli Abuya</h1>
-                    <div className="flex gap-2">
+                    <h1 className="text-2xl md:text-3xl font-bold text-foreground w-full sm:w-auto">Kebuli Abuya</h1>
+                    <div className="flex gap-2 hidden sm:flex">
                       <Button variant="ghost" size="icon" className="rounded-full"><Share2 size={18} /></Button>
                     </div>
                   </div>
-                  <div className="flex flex-wrap items-center gap-3 text-sm">
+                  <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 md:gap-3 text-xs md:text-sm">
                     <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 gap-1 pl-1 pr-2">
                       <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" /> Online
                     </Badge>
                     <div className="flex items-center gap-1 text-yellow-500 font-medium">
                       <Star size={14} className="fill-current" /> 4.9
                     </div>
-                    <span className="text-muted-foreground">•</span>
+                    <span className="text-muted-foreground hidden sm:inline">•</span>
                     <span className="text-muted-foreground">Food & Beverages</span>
-                    <span className="text-muted-foreground">•</span>
+                    <span className="text-muted-foreground hidden sm:inline">•</span>
                     <span className="text-muted-foreground">Est. 2019</span>
                   </div>
-                  <p className="text-muted-foreground pt-2 leading-relaxed">
+                  <p className="text-muted-foreground pt-2 leading-relaxed text-sm md:text-base">
                     Suguhan istimewa di setiap acara. Peluang usaha bagi masyarakat yang ingin mendapatkan makanan berkualitas dengan harga terjangkau yang didukung oleh central kitchen terpercaya.
                   </p>
+                  
+                  {/* Mobile Only Share Button */}
+                  <div className="sm:hidden pt-2 flex justify-center">
+                    <Button variant="outline" size="sm" className="w-full gap-2"><Share2 size={16} /> Bagikan</Button>
+                  </div>
                 </div>
               </div>
             </div>
 
             {/* Media Gallery */}
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-              <div className="aspect-video rounded-xl overflow-hidden bg-muted relative group cursor-pointer">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
+              <div className="col-span-2 md:col-span-1 aspect-video rounded-xl overflow-hidden bg-muted relative group cursor-pointer shadow-sm">
                 <img src={heroImage} alt="Gallery 1" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
                 <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors" />
               </div>
-              <div className="aspect-video rounded-xl overflow-hidden bg-muted relative group cursor-pointer">
-                <div className="w-full h-full bg-secondary/50 flex items-center justify-center text-primary font-medium">Menu 1</div>
+              <div className="aspect-video rounded-xl overflow-hidden bg-muted relative group cursor-pointer shadow-sm">
+                <div className="w-full h-full bg-secondary/50 flex items-center justify-center text-primary font-medium text-sm md:text-base">Menu 1</div>
               </div>
-              <div className="aspect-video rounded-xl overflow-hidden bg-muted relative group cursor-pointer">
-                <div className="w-full h-full bg-secondary/50 flex items-center justify-center text-primary font-medium">Outlet</div>
+              <div className="aspect-video rounded-xl overflow-hidden bg-muted relative group cursor-pointer shadow-sm">
+                <div className="w-full h-full bg-secondary/50 flex items-center justify-center text-primary font-medium text-sm md:text-base">Outlet</div>
               </div>
             </div>
 
             {/* Details Tabs */}
             <Tabs defaultValue="about" className="w-full">
-              <TabsList className="w-full justify-start border-b border-border bg-transparent p-0 h-auto rounded-none gap-6">
-                <TabsTrigger value="about" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:text-primary px-0 py-3 bg-transparent font-medium text-base shadow-none">Tentang</TabsTrigger>
-                <TabsTrigger value="packages" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:text-primary px-0 py-3 bg-transparent font-medium text-base shadow-none">Paket Kemitraan</TabsTrigger>
-                <TabsTrigger value="reviews" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:text-primary px-0 py-3 bg-transparent font-medium text-base shadow-none">Ulasan</TabsTrigger>
-              </TabsList>
+              <div className="overflow-x-auto pb-2 -mx-4 px-4 sm:mx-0 sm:px-0 hide-scrollbar">
+                <TabsList className="w-full justify-start border-b border-border bg-transparent p-0 h-auto rounded-none gap-6 inline-flex min-w-max sm:min-w-0">
+                  <TabsTrigger value="about" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:text-primary px-0 py-3 bg-transparent font-medium text-sm md:text-base shadow-none">Tentang</TabsTrigger>
+                  <TabsTrigger value="packages" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:text-primary px-0 py-3 bg-transparent font-medium text-sm md:text-base shadow-none">Paket Kemitraan</TabsTrigger>
+                  <TabsTrigger value="reviews" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:text-primary px-0 py-3 bg-transparent font-medium text-sm md:text-base shadow-none">Ulasan</TabsTrigger>
+                </TabsList>
+              </div>
               
               <TabsContent value="about" className="pt-6 space-y-6">
                 <div className="prose prose-sm max-w-none text-muted-foreground">
                   <h3 className="text-foreground font-semibold text-lg">Keunggulan Bermitra</h3>
-                  <ul className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                  <ul className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 mt-4">
                     {[
                       "Bahan baku berkualitas premium",
                       "Sistem operasional mudah (SOP Jelas)",
@@ -97,15 +104,15 @@ export default function MerchantDetail() {
                       "Tanpa royalty fee bulanan",
                       "Training karyawan gratis"
                     ].map((item, i) => (
-                      <li key={i} className="flex items-start gap-2">
-                        <CheckCircle2 size={18} className="text-primary mt-0.5" />
+                      <li key={i} className="flex items-start gap-2 text-sm md:text-base">
+                        <CheckCircle2 size={18} className="text-primary mt-0.5 shrink-0" />
                         <span>{item}</span>
                       </li>
                     ))}
                   </ul>
                   
                   <h3 className="text-foreground font-semibold text-lg mt-8">Media Sosial</h3>
-                  <div className="flex gap-4 mt-2">
+                  <div className="flex flex-wrap gap-4 mt-2">
                     <Button variant="outline" size="sm" className="gap-2"><Globe size={14}/> Website</Button>
                     <Button variant="outline" size="sm" className="gap-2"><Share2 size={14}/> Instagram</Button>
                   </div>
@@ -122,9 +129,9 @@ export default function MerchantDetail() {
               {/* Action Card */}
               <Card className="border-border shadow-lg overflow-hidden">
                 <div className="bg-secondary/30 p-4 border-b border-border">
-                  <h3 className="font-semibold">Pilih Paket Kemitraan</h3>
+                  <h3 className="font-semibold text-lg">Pilih Paket Kemitraan</h3>
                 </div>
-                <div className="p-6 space-y-6">
+                <div className="p-5 md:p-6 space-y-6">
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-muted-foreground">Tipe Paket</label>
                     <Select defaultValue="paket1">
@@ -141,12 +148,12 @@ export default function MerchantDetail() {
 
                   <div className="space-y-1">
                     <p className="text-xs text-muted-foreground">Mulai Dari</p>
-                    <p className="text-2xl font-bold text-primary">Rp 90.000.000</p>
+                    <p className="text-2xl md:text-3xl font-bold text-primary">Rp 90.000.000</p>
                     <p className="text-xs text-muted-foreground">- Rp 150.000.000</p>
                   </div>
 
                   <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 flex gap-3">
-                    <div className="bg-amber-100 p-1.5 rounded-full h-fit text-amber-600">
+                    <div className="bg-amber-100 p-1.5 rounded-full h-fit text-amber-600 shrink-0">
                       <Info size={16} />
                     </div>
                     <div className="space-y-1">
@@ -156,8 +163,8 @@ export default function MerchantDetail() {
                   </div>
 
                   <div className="grid grid-cols-2 gap-3">
-                    <Button variant="outline" className="w-full">Beli Sekarang</Button>
-                    <Button className="w-full bg-primary hover:bg-primary/90 text-white shadow-md">
+                    <Button variant="outline" className="w-full text-xs sm:text-sm">Beli Sekarang</Button>
+                    <Button className="w-full bg-primary hover:bg-primary/90 text-white shadow-md text-xs sm:text-sm">
                       Hubungi
                     </Button>
                   </div>
@@ -169,7 +176,7 @@ export default function MerchantDetail() {
               </Card>
 
               {/* Stats Card */}
-              <Card className="bg-primary/5 border-none shadow-none">
+              <Card className="bg-primary/5 border-none shadow-none hidden lg:block">
                 <div className="p-4 grid grid-cols-2 gap-4">
                    <div className="space-y-1">
                      <p className="text-xs text-muted-foreground">Total Gerai</p>
