@@ -2,7 +2,7 @@ import { useState, useRef } from "react";
 import { Link, useRoute } from "wouter";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
-import { MerchantCard, MerchantProps } from "@/components/merchant-card";
+import { MerchantCard } from "@/components/merchant-card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -12,20 +12,8 @@ import { Search, ArrowRight, TrendingUp, Filter, Coffee, Dumbbell } from "lucide
 import heroImage from "@assets/generated_images/professional_business_partnership_banner_showing_growth_and_success.png";
 import coffeeBanner from "@assets/generated_images/modern_coffee_shop_interior_with_warm_lighting.png";
 import gymBanner from "@assets/generated_images/modern_gym_franchise_banner_with_professional_equipment.png";
-import kebabLogo from "@assets/generated_images/logo_for_a_kebab_franchise.png";
-import coffeeLogo from "@assets/generated_images/logo_for_a_coffee_shop_franchise.png";
-import laundryLogo from "@assets/generated_images/logo_for_a_laundry_franchise.png";
-import burgerLogo from "@assets/generated_images/logo_for_a_burger_franchise.png";
 import Autoplay from "embla-carousel-autoplay";
-
-const SAMPLE_MERCHANTS: MerchantProps[] = [
-  { id: "1", name: "Kebuli Abuya", category: "Food & Beverages", logo: kebabLogo, bep: "8-12 Bulan", price: "Rp 50.000.000", type: "Self Managed", rating: 4.8 },
-  { id: "2", name: "Kopi Senja", category: "Coffee Shop", logo: coffeeLogo, bep: "10-14 Bulan", price: "Rp 85.000.000", type: "Auto Pilot", rating: 4.9 },
-  { id: "3", name: "Clean & Fresh", category: "Services", logo: laundryLogo, bep: "12-18 Bulan", price: "Rp 120.000.000", type: "Self Managed", rating: 4.7 },
-  { id: "4", name: "Burger Bros", category: "Food & Beverages", logo: burgerLogo, bep: "6-10 Bulan", price: "Rp 45.000.000", type: "Self Managed", rating: 4.6 },
-  { id: "5", name: "Tohang's Barber", category: "Services", logo: kebabLogo, bep: "12 Bulan", price: "Rp 60.000.000", type: "Self Managed", rating: 4.5 },
-  { id: "6", name: "Balkan Shawarma", category: "Food & Beverages", logo: kebabLogo, bep: "10 Bulan", price: "Rp 55.000.000", type: "Auto Pilot", rating: 4.8 },
-];
+import { DUMMY_MERCHANTS } from "@/data/merchants";
 
 const CAROUSEL_SLIDES = [
   {
@@ -61,6 +49,11 @@ export default function Home() {
   const plugin = useRef(
     Autoplay({ delay: 5000, stopOnInteraction: true })
   );
+
+  // Split merchants into categories
+  const topMerchants = DUMMY_MERCHANTS.filter(m => parseFloat(m.rating?.toString() || "0") >= 4.8);
+  const recommendedMerchants = DUMMY_MERCHANTS.filter(m => m.type.includes("Autopilot") || m.rating === 4.7);
+  const otherMerchants = DUMMY_MERCHANTS;
 
   return (
     <div className="min-h-screen bg-background font-sans">
@@ -160,11 +153,11 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Merchant Eksklusif */}
+      {/* Top Merchant (Merchant Eksklusif) */}
       <section className="py-8 md:py-12 bg-secondary/20">
         <div className="container mx-auto px-4 md:px-6">
           <div className="flex items-center justify-between mb-6 md:mb-8">
-            <h2 className="text-xl md:text-2xl font-bold text-foreground">Merchant Eksklusif</h2>
+            <h2 className="text-xl md:text-2xl font-bold text-foreground">Top Merchant</h2>
             <Link href="#">
               <a className="text-sm font-medium text-primary hover:underline flex items-center gap-1">
                 Lihat Semua <ArrowRight size={14} />
@@ -172,7 +165,7 @@ export default function Home() {
             </Link>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-            {SAMPLE_MERCHANTS.slice(0, 4).map((merchant) => (
+            {topMerchants.slice(0, 4).map((merchant) => (
               <MerchantCard key={merchant.id} merchant={merchant} />
             ))}
           </div>
@@ -184,7 +177,7 @@ export default function Home() {
         <div className="container mx-auto px-4 md:px-6">
           <h2 className="text-xl md:text-2xl font-bold text-foreground mb-6 md:mb-8">Rekomendasi Kami</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-            {SAMPLE_MERCHANTS.slice(2, 6).map((merchant) => (
+            {recommendedMerchants.slice(0, 4).map((merchant) => (
               <MerchantCard key={`rec-${merchant.id}`} merchant={merchant} />
             ))}
           </div>
@@ -209,11 +202,8 @@ export default function Home() {
           </Tabs>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-             {SAMPLE_MERCHANTS.map((merchant) => (
+             {otherMerchants.slice(0, 8).map((merchant) => (
               <MerchantCard key={`find-${merchant.id}`} merchant={merchant} />
-            ))}
-            {SAMPLE_MERCHANTS.slice(0, 2).map((merchant) => (
-              <MerchantCard key={`find-more-${merchant.id}`} merchant={merchant} />
             ))}
           </div>
           

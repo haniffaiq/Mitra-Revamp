@@ -3,17 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Star, TrendingUp, Info } from "lucide-react";
-
-export interface MerchantProps {
-  id: string;
-  name: string;
-  category: string;
-  logo: string;
-  bep: string;
-  price: string;
-  rating?: number;
-  type: "Self Managed" | "Auto Pilot";
-}
+import { MerchantProps } from "@/data/merchants";
 
 export function MerchantCard({ merchant }: { merchant: MerchantProps }) {
   return (
