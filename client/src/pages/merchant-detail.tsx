@@ -1,0 +1,201 @@
+import { Link, useRoute } from "wouter";
+import { Navbar } from "@/components/navbar";
+import { Footer } from "@/components/footer";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Star, MapPin, Globe, Share2, Phone, MessageCircle, ChevronRight, CheckCircle2, Info } from "lucide-react";
+import kebabLogo from "@assets/generated_images/logo_for_a_kebab_franchise.png";
+import heroImage from "@assets/generated_images/professional_business_partnership_banner_showing_growth_and_success.png";
+
+export default function MerchantDetail() {
+  const [, params] = useRoute("/merchant/:id");
+  const id = params?.id;
+
+  return (
+    <div className="min-h-screen bg-background font-sans">
+      <Navbar />
+      
+      {/* Breadcrumb */}
+      <div className="container mx-auto px-4 py-4 text-sm text-muted-foreground">
+        <Link href="/"><a className="hover:text-primary">Home</a></Link>
+        <span className="mx-2">/</span>
+        <span className="text-foreground font-medium">Kebuli Abuya</span>
+      </div>
+
+      <div className="container mx-auto px-4 md:px-6 pb-20">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          
+          {/* Main Content (Left) */}
+          <div className="lg:col-span-8 space-y-8">
+            
+            {/* Header Card */}
+            <div className="bg-card rounded-2xl p-6 md:p-8 border border-border shadow-sm">
+              <div className="flex flex-col md:flex-row gap-6 items-start md:items-center">
+                <div className="w-24 h-24 md:w-32 md:h-32 rounded-full border-4 border-secondary p-1 bg-white shrink-0">
+                  <img src={kebabLogo} alt="Logo" className="w-full h-full object-contain" />
+                </div>
+                <div className="flex-1 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <h1 className="text-3xl font-bold text-foreground">Kebuli Abuya</h1>
+                    <div className="flex gap-2">
+                      <Button variant="ghost" size="icon" className="rounded-full"><Share2 size={18} /></Button>
+                    </div>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-3 text-sm">
+                    <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 gap-1 pl-1 pr-2">
+                      <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" /> Online
+                    </Badge>
+                    <div className="flex items-center gap-1 text-yellow-500 font-medium">
+                      <Star size={14} className="fill-current" /> 4.9
+                    </div>
+                    <span className="text-muted-foreground">•</span>
+                    <span className="text-muted-foreground">Food & Beverages</span>
+                    <span className="text-muted-foreground">•</span>
+                    <span className="text-muted-foreground">Est. 2019</span>
+                  </div>
+                  <p className="text-muted-foreground pt-2 leading-relaxed">
+                    Suguhan istimewa di setiap acara. Peluang usaha bagi masyarakat yang ingin mendapatkan makanan berkualitas dengan harga terjangkau yang didukung oleh central kitchen terpercaya.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Media Gallery */}
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              <div className="aspect-video rounded-xl overflow-hidden bg-muted relative group cursor-pointer">
+                <img src={heroImage} alt="Gallery 1" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors" />
+              </div>
+              <div className="aspect-video rounded-xl overflow-hidden bg-muted relative group cursor-pointer">
+                <div className="w-full h-full bg-secondary/50 flex items-center justify-center text-primary font-medium">Menu 1</div>
+              </div>
+              <div className="aspect-video rounded-xl overflow-hidden bg-muted relative group cursor-pointer">
+                <div className="w-full h-full bg-secondary/50 flex items-center justify-center text-primary font-medium">Outlet</div>
+              </div>
+            </div>
+
+            {/* Details Tabs */}
+            <Tabs defaultValue="about" className="w-full">
+              <TabsList className="w-full justify-start border-b border-border bg-transparent p-0 h-auto rounded-none gap-6">
+                <TabsTrigger value="about" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:text-primary px-0 py-3 bg-transparent font-medium text-base shadow-none">Tentang</TabsTrigger>
+                <TabsTrigger value="packages" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:text-primary px-0 py-3 bg-transparent font-medium text-base shadow-none">Paket Kemitraan</TabsTrigger>
+                <TabsTrigger value="reviews" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:text-primary px-0 py-3 bg-transparent font-medium text-base shadow-none">Ulasan</TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="about" className="pt-6 space-y-6">
+                <div className="prose prose-sm max-w-none text-muted-foreground">
+                  <h3 className="text-foreground font-semibold text-lg">Keunggulan Bermitra</h3>
+                  <ul className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                    {[
+                      "Bahan baku berkualitas premium",
+                      "Sistem operasional mudah (SOP Jelas)",
+                      "Support marketing nasional",
+                      "Harga jual terjangkau, margin tinggi",
+                      "Tanpa royalty fee bulanan",
+                      "Training karyawan gratis"
+                    ].map((item, i) => (
+                      <li key={i} className="flex items-start gap-2">
+                        <CheckCircle2 size={18} className="text-primary mt-0.5" />
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  
+                  <h3 className="text-foreground font-semibold text-lg mt-8">Media Sosial</h3>
+                  <div className="flex gap-4 mt-2">
+                    <Button variant="outline" size="sm" className="gap-2"><Globe size={14}/> Website</Button>
+                    <Button variant="outline" size="sm" className="gap-2"><Share2 size={14}/> Instagram</Button>
+                  </div>
+                </div>
+              </TabsContent>
+            </Tabs>
+
+          </div>
+
+          {/* Sidebar (Right) */}
+          <div className="lg:col-span-4 space-y-6">
+            <div className="sticky top-24 space-y-6">
+              
+              {/* Action Card */}
+              <Card className="border-border shadow-lg overflow-hidden">
+                <div className="bg-secondary/30 p-4 border-b border-border">
+                  <h3 className="font-semibold">Pilih Paket Kemitraan</h3>
+                </div>
+                <div className="p-6 space-y-6">
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-muted-foreground">Tipe Paket</label>
+                    <Select defaultValue="paket1">
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Pilih paket" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="paket1">Paket Silver (Booth)</SelectItem>
+                        <SelectItem value="paket2">Paket Gold (Mini Resto)</SelectItem>
+                        <SelectItem value="paket3">Paket Platinum (Resto)</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-1">
+                    <p className="text-xs text-muted-foreground">Mulai Dari</p>
+                    <p className="text-2xl font-bold text-primary">Rp 90.000.000</p>
+                    <p className="text-xs text-muted-foreground">- Rp 150.000.000</p>
+                  </div>
+
+                  <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 flex gap-3">
+                    <div className="bg-amber-100 p-1.5 rounded-full h-fit text-amber-600">
+                      <Info size={16} />
+                    </div>
+                    <div className="space-y-1">
+                      <p className="text-xs font-bold text-amber-800">Perlu diperhatikan!</p>
+                      <p className="text-[10px] text-amber-700 leading-tight">Biaya diatas belum termasuk biaya sewa lokasi dan renovasi tempat.</p>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3">
+                    <Button variant="outline" className="w-full">Beli Sekarang</Button>
+                    <Button className="w-full bg-primary hover:bg-primary/90 text-white shadow-md">
+                      Hubungi
+                    </Button>
+                  </div>
+                  
+                  <div className="text-center">
+                    <a href="#" className="text-xs text-muted-foreground underline hover:text-primary">Punya pertanyaan tentang kemitraan ini?</a>
+                  </div>
+                </div>
+              </Card>
+
+              {/* Stats Card */}
+              <Card className="bg-primary/5 border-none shadow-none">
+                <div className="p-4 grid grid-cols-2 gap-4">
+                   <div className="space-y-1">
+                     <p className="text-xs text-muted-foreground">Total Gerai</p>
+                     <p className="font-bold text-foreground">58 Cabang</p>
+                   </div>
+                   <div className="space-y-1">
+                     <p className="text-xs text-muted-foreground">Bergabung</p>
+                     <p className="font-bold text-foreground">2019</p>
+                   </div>
+                   <div className="space-y-1">
+                     <p className="text-xs text-muted-foreground">Min. Kontrak</p>
+                     <p className="font-bold text-foreground">5 Tahun</p>
+                   </div>
+                   <div className="space-y-1">
+                     <p className="text-xs text-muted-foreground">Royalty Fee</p>
+                     <p className="font-bold text-foreground">Gratis</p>
+                   </div>
+                </div>
+              </Card>
+
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <Footer />
+    </div>
+  );
+}
