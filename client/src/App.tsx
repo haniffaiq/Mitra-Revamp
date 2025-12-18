@@ -7,6 +7,8 @@ import NotFound from "@/pages/not-found";
 import Home from "@/pages/home";
 import MerchantDetail from "@/pages/merchant-detail";
 import Insight from "@/pages/insight";
+import Login from "@/pages/login";
+import Register from "@/pages/register";
 
 function Router() {
   return (
@@ -14,6 +16,8 @@ function Router() {
       <Route path="/" component={Home} />
       <Route path="/insight" component={Insight} />
       <Route path="/merchant/:id" component={MerchantDetail} />
+      <Route path="/login" component={Login} />
+      <Route path="/register" component={Register} />
       <Route component={NotFound} />
     </Switch>
   );

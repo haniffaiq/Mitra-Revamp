@@ -1,4 +1,4 @@
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Search, Menu } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -6,6 +6,7 @@ import { useState } from "react";
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [, setLocation] = useLocation();
 
   return (
     <nav className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-md">
@@ -27,12 +28,16 @@ export function Navbar() {
         </div>
 
         <div className="flex items-center gap-3">
-          <Button variant="ghost" size="sm" className="hidden sm:flex text-muted-foreground hover:text-primary">
-            Masuk
-          </Button>
-          <Button size="sm" className="hidden sm:flex bg-primary hover:bg-primary/90 text-white shadow-md">
-            Daftar
-          </Button>
+          <Link href="/login">
+            <Button variant="ghost" size="sm" className="hidden sm:flex text-muted-foreground hover:text-primary">
+              Masuk
+            </Button>
+          </Link>
+          <Link href="/register">
+            <Button size="sm" className="hidden sm:flex bg-primary hover:bg-primary/90 text-white shadow-md">
+              Daftar
+            </Button>
+          </Link>
 
           {/* Mobile Menu Trigger */}
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -58,10 +63,10 @@ export function Navbar() {
                 </div>
                 <div className="h-px bg-border my-2" />
                 <div className="flex flex-col gap-3">
-                  <Button variant="outline" className="w-full justify-center" onClick={() => setIsOpen(false)}>
+                  <Button variant="outline" className="w-full justify-center" onClick={() => { setIsOpen(false); setLocation("/login"); }}>
                     Masuk
                   </Button>
-                  <Button className="w-full justify-center bg-primary hover:bg-primary/90 text-white" onClick={() => setIsOpen(false)}>
+                  <Button className="w-full justify-center bg-primary hover:bg-primary/90 text-white" onClick={() => { setIsOpen(false); setLocation("/register"); }}>
                     Daftar
                   </Button>
                 </div>
