@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Link, useRoute } from "wouter";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
@@ -7,12 +7,16 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Search, ArrowRight, TrendingUp, Filter } from "lucide-react";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import { Search, ArrowRight, TrendingUp, Filter, Coffee, Dumbbell } from "lucide-react";
 import heroImage from "@assets/generated_images/professional_business_partnership_banner_showing_growth_and_success.png";
+import coffeeBanner from "@assets/generated_images/modern_coffee_shop_interior_with_warm_lighting.png";
+import gymBanner from "@assets/generated_images/modern_gym_franchise_banner_with_professional_equipment.png";
 import kebabLogo from "@assets/generated_images/logo_for_a_kebab_franchise.png";
 import coffeeLogo from "@assets/generated_images/logo_for_a_coffee_shop_franchise.png";
 import laundryLogo from "@assets/generated_images/logo_for_a_laundry_franchise.png";
 import burgerLogo from "@assets/generated_images/logo_for_a_burger_franchise.png";
+import Autoplay from "embla-carousel-autoplay";
 
 const SAMPLE_MERCHANTS: MerchantProps[] = [
   { id: "1", name: "Kebuli Abuya", category: "Food & Beverages", logo: kebabLogo, bep: "8-12 Bulan", price: "Rp 50.000.000", type: "Self Managed", rating: 4.8 },
@@ -23,7 +27,41 @@ const SAMPLE_MERCHANTS: MerchantProps[] = [
   { id: "6", name: "Balkan Shawarma", category: "Food & Beverages", logo: kebabLogo, bep: "10 Bulan", price: "Rp 55.000.000", type: "Auto Pilot", rating: 4.8 },
 ];
 
+const CAROUSEL_SLIDES = [
+  {
+    image: heroImage,
+    tag: "Trending 2025",
+    icon: TrendingUp,
+    title: "Bisnis Autopilot",
+    highlight: "100% Keuntungan",
+    description: "Mulai bisnismu sekarang dengan dukungan penuh dari tim ahli kami. Tanpa ribet, langsung profit.",
+    color: "from-primary/95 via-primary/60"
+  },
+  {
+    image: coffeeBanner,
+    tag: "F&B Terlaris",
+    icon: Coffee,
+    title: "Waralaba Kopi",
+    highlight: "ROI Tinggi",
+    description: "Bergabung dengan jaringan coffee shop dengan pertumbuhan tercepat di Indonesia. Konsep modern & diminati.",
+    color: "from-amber-900/95 via-amber-800/60"
+  },
+  {
+    image: gymBanner,
+    tag: "Gaya Hidup Sehat",
+    icon: Dumbbell,
+    title: "Pusat Kebugaran",
+    highlight: "Member Setia",
+    description: "Bisnis gym modern dengan peralatan premium. Peluang emas di industri kesehatan yang sedang naik daun.",
+    color: "from-slate-900/95 via-slate-800/60"
+  }
+];
+
 export default function Home() {
+  const plugin = useRef(
+    Autoplay({ delay: 5000, stopOnInteraction: true })
+  );
+
   return (
     <div className="min-h-screen bg-background font-sans">
       <Navbar />
@@ -34,7 +72,7 @@ export default function Home() {
         
         <div className="container mx-auto px-4 md:px-6 space-y-6 md:space-y-8">
           {/* Search Bar - Enhanced for Mobile */}
-          <div className="max-w-4xl mx-auto bg-white/90 backdrop-blur-md rounded-xl md:rounded-2xl shadow-lg border border-white/20 p-3 flex flex-col md:flex-row gap-3">
+          <div className="max-w-4xl mx-auto bg-white/90 backdrop-blur-md rounded-xl md:rounded-2xl shadow-lg border border-white/20 p-3 flex flex-col md:flex-row gap-3 relative z-10">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
               <Input placeholder="Cari nama merchant..." className="pl-9 bg-transparent border-transparent focus-visible:ring-0 h-10 md:h-auto" />
@@ -71,28 +109,43 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Banner */}
-          <div className="relative rounded-2xl md:rounded-3xl overflow-hidden aspect-[4/3] sm:aspect-[21/9] md:aspect-[3/1] shadow-xl md:shadow-2xl group">
-            <img src={heroImage} alt="Hero Banner" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
-            <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-primary/95 via-primary/60 to-transparent flex items-end md:items-center p-6 md:px-16">
-              <div className="max-w-lg space-y-3 md:space-y-4 w-full">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/20 backdrop-blur-sm border border-white/20 text-white text-[10px] md:text-xs font-medium">
-                  <TrendingUp size={12} />
-                  <span>Trending 2025</span>
-                </div>
-                <h1 className="text-2xl sm:text-3xl md:text-5xl font-bold text-white leading-tight">
-                  Bisnis Autopilot <br/> 
-                  <span className="text-accent">100% Keuntungan</span>
-                </h1>
-                <p className="text-white/90 text-xs sm:text-sm md:text-base max-w-md hidden sm:block">
-                  Mulai bisnismu sekarang dengan dukungan penuh dari tim ahli kami. Tanpa ribet, langsung profit.
-                </p>
-                <Button variant="outline" size="sm" className="w-full sm:w-auto bg-white/10 text-white border-white/30 hover:bg-white hover:text-primary mt-2 backdrop-blur-sm">
-                  Pelajari Lebih Lanjut
-                </Button>
-              </div>
-            </div>
-          </div>
+          {/* Banner Carousel */}
+          <Carousel 
+            plugins={[plugin.current]}
+            className="w-full shadow-xl md:shadow-2xl rounded-2xl md:rounded-3xl overflow-hidden"
+            onMouseEnter={plugin.current.stop}
+            onMouseLeave={plugin.current.reset}
+          >
+            <CarouselContent>
+              {CAROUSEL_SLIDES.map((slide, index) => (
+                <CarouselItem key={index}>
+                  <div className="relative aspect-[4/3] sm:aspect-[21/9] md:aspect-[3/1] group">
+                    <img src={slide.image} alt={slide.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                    <div className={`absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r ${slide.color} to-transparent flex items-end md:items-center p-6 md:px-16`}>
+                      <div className="max-w-lg space-y-3 md:space-y-4 w-full">
+                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/20 backdrop-blur-sm border border-white/20 text-white text-[10px] md:text-xs font-medium">
+                          <slide.icon size={12} />
+                          <span>{slide.tag}</span>
+                        </div>
+                        <h1 className="text-2xl sm:text-3xl md:text-5xl font-bold text-white leading-tight">
+                          {slide.title} <br/> 
+                          <span className="text-accent">{slide.highlight}</span>
+                        </h1>
+                        <p className="text-white/90 text-xs sm:text-sm md:text-base max-w-md hidden sm:block">
+                          {slide.description}
+                        </p>
+                        <Button variant="outline" size="sm" className="w-full sm:w-auto bg-white/10 text-white border-white/30 hover:bg-white hover:text-primary mt-2 backdrop-blur-sm">
+                          Pelajari Lebih Lanjut
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious className="left-4 hidden md:flex" />
+            <CarouselNext className="right-4 hidden md:flex" />
+          </Carousel>
           
           {/* Promo Bar */}
           <div className="bg-white border border-border rounded-xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-sm text-center sm:text-left">
