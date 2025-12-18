@@ -20,8 +20,8 @@ export function Navbar() {
         {/* Desktop Menu */}
         <div className="hidden md:flex items-center gap-6 text-sm font-medium text-muted-foreground">
           <Link href="/insight"><a className="hover:text-primary transition-colors">Insight</a></Link>
-          <Link href="/"><a className="hover:text-primary transition-colors">Merchant Kami</a></Link>
-          <Link href="/"><a className="hover:text-primary transition-colors flex items-center gap-1">
+          <Link href="/merchants"><a className="hover:text-primary transition-colors">Merchant Kami</a></Link>
+          <Link href="/become-merchant"><a className="hover:text-primary transition-colors flex items-center gap-1">
             Menjadi Merchant
             <span className="bg-accent/10 text-accent text-[10px] px-1.5 py-0.5 rounded-full">Baru</span>
           </a></Link>
@@ -55,8 +55,8 @@ export function Navbar() {
                 </Link>
                 <div className="flex flex-col gap-4 text-base font-medium text-muted-foreground">
                   <Link href="/insight"><a onClick={() => setIsOpen(false)} className="hover:text-primary transition-colors">Insight</a></Link>
-                  <Link href="/"><a onClick={() => setIsOpen(false)} className="hover:text-primary transition-colors">Merchant Kami</a></Link>
-                  <Link href="/"><a onClick={() => setIsOpen(false)} className="hover:text-primary transition-colors flex items-center gap-1">
+                  <Link href="/merchants"><a onClick={() => setIsOpen(false)} className="hover:text-primary transition-colors">Merchant Kami</a></Link>
+                  <Link href="/become-merchant"><a onClick={() => setIsOpen(false)} className="hover:text-primary transition-colors flex items-center gap-1">
                     Menjadi Merchant
                     <span className="bg-accent/10 text-accent text-xs px-2 py-0.5 rounded-full">Baru</span>
                   </a></Link>
