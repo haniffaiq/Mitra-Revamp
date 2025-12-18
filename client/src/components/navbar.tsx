@@ -18,7 +18,7 @@ export function Navbar() {
 
         {/* Desktop Menu */}
         <div className="hidden md:flex items-center gap-6 text-sm font-medium text-muted-foreground">
-          <Link href="/"><a className="hover:text-primary transition-colors">Insight</a></Link>
+          <Link href="/insight"><a className="hover:text-primary transition-colors">Insight</a></Link>
           <Link href="/"><a className="hover:text-primary transition-colors">Merchant Kami</a></Link>
           <Link href="/"><a className="hover:text-primary transition-colors flex items-center gap-1">
             Menjadi Merchant
@@ -49,7 +49,7 @@ export function Navbar() {
                   </a>
                 </Link>
                 <div className="flex flex-col gap-4 text-base font-medium text-muted-foreground">
-                  <Link href="/"><a onClick={() => setIsOpen(false)} className="hover:text-primary transition-colors">Insight</a></Link>
+                  <Link href="/insight"><a onClick={() => setIsOpen(false)} className="hover:text-primary transition-colors">Insight</a></Link>
                   <Link href="/"><a onClick={() => setIsOpen(false)} className="hover:text-primary transition-colors">Merchant Kami</a></Link>
                   <Link href="/"><a onClick={() => setIsOpen(false)} className="hover:text-primary transition-colors flex items-center gap-1">
                     Menjadi Merchant
