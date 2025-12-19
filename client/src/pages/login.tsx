@@ -3,15 +3,12 @@ import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, Building2, User, Eye, EyeOff } from "lucide-react";
+import { ArrowLeft, Eye, EyeOff } from "lucide-react";
 import bgImage from "@assets/generated_images/professional_handshake_business_partnership_background.png";
 
 export default function Login() {
   const [, setLocation] = useLocation();
   const [showPassword, setShowPassword] = useState(false);
-  const [activeTab, setActiveTab] = useState("user");
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -48,85 +45,39 @@ export default function Login() {
         <div className="max-w-md mx-auto w-full space-y-8">
           <div className="text-center md:text-left space-y-2">
             <h2 className="text-3xl font-bold text-foreground">Masuk ke Akun</h2>
-            <p className="text-muted-foreground">Silakan pilih tipe akun Anda untuk melanjutkan</p>
+            <p className="text-muted-foreground">Silakan masuk untuk melanjutkan</p>
           </div>
 
-          <Tabs defaultValue="user" value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid grid-cols-2 w-full mb-8">
-              <TabsTrigger value="user" className="gap-2">
-                <User size={16} /> User
-              </TabsTrigger>
-              <TabsTrigger value="merchant" className="gap-2">
-                <Building2 size={16} /> Merchant
-              </TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="user">
-              <form onSubmit={handleLogin} className="space-y-6">
-                <div className="space-y-2">
-                  <Label htmlFor="email-user">Email Address</Label>
-                  <Input id="email-user" type="email" placeholder="nama@email.com" required />
-                </div>
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <Label htmlFor="password-user">Password</Label>
-                    <a href="#" className="text-xs text-primary hover:underline font-medium">Lupa Password?</a>
-                  </div>
-                  <div className="relative">
-                    <Input 
-                      id="password-user" 
-                      type={showPassword ? "text" : "password"} 
-                      placeholder="••••••••" 
-                      required 
-                    />
-                    <button 
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                    >
-                      {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-                    </button>
-                  </div>
-                </div>
-                <Button type="submit" className="w-full h-11 text-base bg-primary hover:bg-primary/90 text-white shadow-lg">
-                  Masuk sebagai User
-                </Button>
-              </form>
-            </TabsContent>
-
-            <TabsContent value="merchant">
-              <form onSubmit={handleLogin} className="space-y-6">
-                <div className="space-y-2">
-                  <Label htmlFor="email-merchant">Email Bisnis</Label>
-                  <Input id="email-merchant" type="email" placeholder="bisnis@perusahaan.com" required />
-                </div>
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <Label htmlFor="password-merchant">Password</Label>
-                    <a href="#" className="text-xs text-primary hover:underline font-medium">Lupa Password?</a>
-                  </div>
-                  <div className="relative">
-                    <Input 
-                      id="password-merchant" 
-                      type={showPassword ? "text" : "password"} 
-                      placeholder="••••••••" 
-                      required 
-                    />
-                    <button 
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                    >
-                      {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-                    </button>
-                  </div>
-                </div>
-                <Button type="submit" className="w-full h-11 text-base bg-primary hover:bg-primary/90 text-white shadow-lg">
-                  Masuk sebagai Merchant
-                </Button>
-              </form>
-            </TabsContent>
-          </Tabs>
+          <form onSubmit={handleLogin} className="space-y-6">
+            <div className="space-y-2">
+              <Label htmlFor="email">Email Address</Label>
+              <Input id="email" type="email" placeholder="nama@email.com" required />
+            </div>
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <Label htmlFor="password">Password</Label>
+                <a href="#" className="text-xs text-primary hover:underline font-medium">Lupa Password?</a>
+              </div>
+              <div className="relative">
+                <Input 
+                  id="password" 
+                  type={showPassword ? "text" : "password"} 
+                  placeholder="••••••••" 
+                  required 
+                />
+                <button 
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                >
+                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
+              </div>
+            </div>
+            <Button type="submit" className="w-full h-11 text-base bg-primary hover:bg-primary/90 text-white shadow-lg">
+              Masuk
+            </Button>
+          </form>
 
           <div className="text-center text-sm">
             <span className="text-muted-foreground">Belum punya akun? </span>
