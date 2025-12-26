@@ -1,213 +1,241 @@
+export type MerchantPartnershipType =
+  | "Self Managed"
+  | "Semi-Autopilot"
+  | "Full-Autopilot"
+  | "Auto Pilot";
+
 export interface MerchantProps {
   id: string;
   name: string;
+  slug: string;
   category: string;
-  logo: string;
-  bep: string;
-  price: string;
+  logoUrl: string;
+  bepMonths: number;
+  priceMin: number;
+  priceMax?: number;
   rating?: number;
-  type: string;
+  type: MerchantPartnershipType;
 }
 
 export const DUMMY_MERCHANTS: MerchantProps[] = [
   {
-    id: "1",
+    id: "1badab00-f01c-4f81-adac-5f2a6f545a68",
     name: "Kebuli Abuya",
-    logo: "https://peluang-images.s3.ap-southeast-1.amazonaws.com/Kebuli+Abuya/Logo-Kebuli+ABUYA+(1).jpg",
+    slug: "kebuli-abuya",
+    logoUrl: "https://peluang-images.s3.ap-southeast-1.amazonaws.com/Kebuli+Abuya/Logo-Kebuli+ABUYA+(1).jpg",
     category: "Food & Beverages",
     type: "Self Managed",
-    bep: "12 Bulan",
+    bepMonths: 12,
     rating: 4.9,
-    price: "Rp.90.000.000"
+    priceMin: 90000000,
   },
   {
-    id: "2",
+    id: "7f29df02-b9d2-43dd-ae71-d2f4c41384d8",
     name: "Tohang's Barber",
-    logo: "https://peluang-images.s3.ap-southeast-1.amazonaws.com/Tohang/logo3+1.png",
+    slug: "tohangs-barber",
+    logoUrl: "https://peluang-images.s3.ap-southeast-1.amazonaws.com/Tohang/logo3+1.png",
     category: "Beauty/Self Care",
     type: "Semi-Autopilot",
-    bep: "12 Bulan",
+    bepMonths: 12,
     rating: 4.8,
-    price: "Rp.256.000.000"
+    priceMin: 256000000,
   },
   {
-    id: "3",
+    id: "1012e969-25ee-4134-ab44-6918f1713a5b",
     name: "Balkan Shawarma",
-    logo: "https://peluang-images.s3.ap-southeast-1.amazonaws.com/Balkan/balkan+logo.jpg",
+    slug: "balkan-shawarma",
+    logoUrl: "https://peluang-images.s3.ap-southeast-1.amazonaws.com/Balkan/balkan+logo.jpg",
     category: "Food & Beverages",
     type: "Full-Autopilot",
-    bep: "12 Bulan",
+    bepMonths: 12,
     rating: 4.7,
-    price: "Rp.59.000.000"
+    priceMin: 59000000,
   },
   {
-    id: "4",
+    id: "cd80fea0-d31e-4d3d-b5bc-59461ca0a966",
     name: "Autoclean Waterless",
-    logo: "https://peluang-images.s3.ap-southeast-1.amazonaws.com/Autoclean/autoclean+logo.png",
+    slug: "autoclean-waterless",
+    logoUrl: "https://peluang-images.s3.ap-southeast-1.amazonaws.com/Autoclean/autoclean+logo.png",
     category: "Automotive",
     type: "Full-Autopilot",
-    bep: "12 Bulan",
+    bepMonths: 12,
     rating: 4.6,
-    price: "Rp.98.000.000"
+    priceMin: 98000000,
   },
   {
-    id: "6",
+    id: "d75371cd-baa7-4101-805f-bba99c5040ed",
     name: "Sukayaki",
-    logo: "https://peluang-images.s3.ap-southeast-1.amazonaws.com/Sukayaki/sukayaki-logo(2)+(2).png",
+    slug: "sukayaki",
+    logoUrl: "https://peluang-images.s3.ap-southeast-1.amazonaws.com/Sukayaki/sukayaki-logo(2)+(2).png",
     category: "Food & Beverages",
     type: "Semi-Autopilot",
-    bep: "12 Bulan",
+    bepMonths: 12,
     rating: 4.5,
-    price: "Rp.9.888.888"
+    priceMin: 9888888,
   },
   {
-    id: "7",
+    id: "69325721-4b5f-477c-9456-a2cfbcce7bd1",
     name: "Kriuk Kriuk",
-    logo: "https://peluang-images.s3.ap-southeast-1.amazonaws.com/Kriuk-Kriuk/LOGO+PNG+(1).png",
+    slug: "kriuk-kriuk",
+    logoUrl: "https://peluang-images.s3.ap-southeast-1.amazonaws.com/Kriuk-Kriuk/LOGO+PNG+(1).png",
     category: "Food & Beverages",
     type: "Semi-Autopilot",
-    bep: "12 Bulan",
+    bepMonths: 12,
     rating: 4.4,
-    price: "Rp.40.000.000"
+    priceMin: 40000000,
   },
   {
-    id: "8",
+    id: "d5a3bbe9-bdad-44d5-82ed-70b62be3c7e5",
     name: "BongOBong",
-    logo: "https://peluang-images.s3.ap-southeast-1.amazonaws.com/BongoBong/Artboard+4+logo.png",
+    slug: "bongobong",
+    logoUrl: "https://peluang-images.s3.ap-southeast-1.amazonaws.com/BongoBong/Artboard+4+logo.png",
     category: "Food & Beverages",
     type: "Semi-Autopilot",
-    bep: "12 Bulan",
+    bepMonths: 12,
     rating: 4.3,
-    price: "Rp.600.000.000"
+    priceMin: 600000000,
   },
   {
-    id: "9",
+    id: "03184ee3-f1d8-4618-84cd-1960e73abdab",
     name: "GYU-RIH",
-    logo: "https://peluang-images.s3.ap-southeast-1.amazonaws.com/GYU-RIH/Artboard+5+(1).png",
+    slug: "gyu-rih",
+    logoUrl: "https://peluang-images.s3.ap-southeast-1.amazonaws.com/GYU-RIH/Artboard+5+(1).png",
     category: "Food & Beverages",
     type: "Semi-Autopilot",
-    bep: "12 Bulan",
+    bepMonths: 12,
     rating: 4.2,
-    price: "Rp.100.000.000"
+    priceMin: 100000000,
   },
   {
-    id: "10",
+    id: "f5f7d018-b44e-40cf-9386-f039df00750c",
     name: "Studio Potong",
-    logo: "https://peluang-images.s3.ap-southeast-1.amazonaws.com/Studiopotong/LOGO+SP+WHITE+(1).jpg",
+    slug: "studio-potong",
+    logoUrl: "https://peluang-images.s3.ap-southeast-1.amazonaws.com/Studiopotong/LOGO+SP+WHITE+(1).jpg",
     category: "Beauty/Self Care",
     type: "Semi-Autopilot",
-    bep: "12 Bulan",
+    bepMonths: 12,
     rating: 4.1,
-    price: "Rp.240.000.000"
+    priceMin: 240000000,
   },
   {
-    id: "11",
+    id: "6aea450d-b849-446e-b726-399181862110",
     name: "Roti Ropi",
-    logo: "https://peluang-images.s3.ap-southeast-1.amazonaws.com/RotiRopi/logo+ropi.jpg",
+    slug: "roti-ropi",
+    logoUrl: "https://peluang-images.s3.ap-southeast-1.amazonaws.com/RotiRopi/logo+ropi.jpg",
     category: "Food & Beverages",
     type: "Semi-Autopilot",
-    bep: "12 Bulan",
+    bepMonths: 12,
     rating: 4.0,
-    price: "Rp.165.000.000"
+    priceMin: 165000000,
   },
   {
-    id: "12",
+    id: "3d69b836-94de-46e5-8410-bf64276910b2",
     name: "Barburger",
-    logo: "https://peluang-images.s3.ap-southeast-1.amazonaws.com/BARBURGER/new-logo.png",
+    slug: "barburger",
+    logoUrl: "https://peluang-images.s3.ap-southeast-1.amazonaws.com/BARBURGER/new-logo.png",
     category: "Food & Beverages",
     type: "Semi-Autopilot",
-    bep: "12 Bulan",
+    bepMonths: 12,
     rating: 4.9,
-    price: "Rp.123.000.000"
+    priceMin: 123000000,
   },
   {
-    id: "13",
+    id: "e3c58962-9ffb-400b-8523-627f18d891d9",
     name: "Crispyku",
-    logo: "https://peluang-images.s3.ap-southeast-1.amazonaws.com/Crispyku/Crispyku.png",
+    slug: "crispyku",
+    logoUrl: "https://peluang-images.s3.ap-southeast-1.amazonaws.com/Crispyku/Crispyku.png",
     category: "Food & Beverages",
     type: "Semi-Autopilot",
-    bep: "12 Bulan",
+    bepMonths: 12,
     rating: 4.8,
-    price: "Rp.22.000.000"
+    priceMin: 22000000,
   },
   {
-    id: "14",
+    id: "9f2289ea-01ab-49a7-9701-9c077818271e",
     name: "KANE FRIED CHICKEN",
-    logo: "https://peluang-images.s3.ap-southeast-1.amazonaws.com/KANE+FRIED+CHICKEN/logo+kane.jpg",
+    slug: "kane-fried-chicken",
+    logoUrl: "https://peluang-images.s3.ap-southeast-1.amazonaws.com/KANE+FRIED+CHICKEN/logo+kane.jpg",
     category: "Food & Beverages",
     type: "Semi-Autopilot",
-    bep: "12 Bulan",
+    bepMonths: 12,
     rating: 4.7,
-    price: "Rp.22.000.000"
+    priceMin: 22000000,
   },
   {
-    id: "15",
+    id: "2b06e722-6031-4c38-8dc9-3694645900b1",
     name: "MIE AYAM BENGKEL",
-    logo: "https://peluang-images.s3.ap-southeast-1.amazonaws.com/MIE+AYAM+BENGKEL/PHOTO-2024-04-19-15-33-50.jpg",
+    slug: "mie-ayam-bengkel",
+    logoUrl: "https://peluang-images.s3.ap-southeast-1.amazonaws.com/MIE+AYAM+BENGKEL/PHOTO-2024-04-19-15-33-50.jpg",
     category: "Food & Beverages",
     type: "Semi-Autopilot",
-    bep: "12 Bulan",
+    bepMonths: 12,
     rating: 4.6,
-    price: "Rp.35.000.000"
+    priceMin: 35000000,
   },
   {
-    id: "16",
+    id: "b6a453df-51da-48df-95e8-b5a8cdaa044f",
     name: "MIE AYAM + BAKSO BENGKEL",
-    logo: "https://placehold.co/500x400.png?text=Mie+Ayam",
+    slug: "mie-ayam-bakso-bengkel",
+    logoUrl: "https://placehold.co/500x400.png?text=Mie+Ayam",
     category: "Food & Beverages",
     type: "Semi-Autopilot",
-    bep: "12 Bulan",
+    bepMonths: 12,
     rating: 4.5,
-    price: "Rp.100.000.000"
+    priceMin: 100000000,
   },
   {
-    id: "17",
+    id: "c0012a74-627d-4b9b-bc4c-d461acb9924e",
     name: "Ayam penyet cobek kaisar",
-    logo: "https://placehold.co/500x400.png?text=Ayam+Penyet",
+    slug: "ayam-penyet-cobek-kaisar",
+    logoUrl: "https://placehold.co/500x400.png?text=Ayam+Penyet",
     category: "Food & Beverages",
     type: "Semi-Autopilot",
-    bep: "12 Bulan",
+    bepMonths: 12,
     rating: 4.4,
-    price: "Rp.100.000.000"
+    priceMin: 100000000,
   },
   {
-    id: "18",
+    id: "5c23d972-8ca7-4765-a53f-b6cca31c6860",
     name: "Jalakoteku",
-    logo: "https://peluang-images.s3.ap-southeast-1.amazonaws.com/JALAKOTEKU/LOGO+UTAMA.png",
+    slug: "jalakoteku",
+    logoUrl: "https://peluang-images.s3.ap-southeast-1.amazonaws.com/JALAKOTEKU/LOGO+UTAMA.png",
     category: "Food & Beverages",
     type: "Semi-Autopilot",
-    bep: "12 Bulan",
+    bepMonths: 12,
     rating: 4.3,
-    price: "Rp.4.400.000"
+    priceMin: 4400000,
   },
   {
-    id: "19",
+    id: "f586aca3-865b-4756-9b2d-74514c1f7d02",
     name: "Misnow",
-    logo: "https://peluang-images.s3.ap-southeast-1.amazonaws.com/MISNOW/logo+msinow.png",
+    slug: "misnow",
+    logoUrl: "https://peluang-images.s3.ap-southeast-1.amazonaws.com/MISNOW/logo+msinow.png",
     category: "Food & Beverages",
     type: "Semi-Autopilot",
-    bep: "12 Bulan",
+    bepMonths: 12,
     rating: 4.2,
-    price: "Rp.115.000.000"
+    priceMin: 115000000,
   },
   {
-    id: "20",
+    id: "ced37ec6-03bc-496b-8316-4c7dc1ab5987",
     name: "Chick e'Nin",
-    logo: "https://peluang-images.s3.ap-southeast-1.amazonaws.com/Chic+e_+Nin/61b0478b52e45.webp",
+    slug: "chick-e-nin",
+    logoUrl: "https://peluang-images.s3.ap-southeast-1.amazonaws.com/Chic+e_+Nin/61b0478b52e45.webp",
     category: "Food & Beverages",
     type: "Semi-Autopilot",
-    bep: "12 Bulan",
+    bepMonths: 12,
     rating: 4.1,
-    price: "Rp.9.000.000"
+    priceMin: 9000000,
   },
   {
-    id: "21",
+    id: "6b1c3099-a764-4f7d-8408-00239cacee5b",
     name: "Ghanisa Clinic & Skincare",
-    logo: "https://placehold.co/500x400.png?text=Ghanisa",
+    slug: "ghanisa-clinic-skincare",
+    logoUrl: "https://placehold.co/500x400.png?text=Ghanisa",
     category: "Beauty/Self Care",
     type: "Auto Pilot",
-    bep: "12 Bulan",
+    bepMonths: 12,
     rating: 4.2,
-    price: "Rp.250.000.000"
-  }
+    priceMin: 250000000,
+  },
 ];

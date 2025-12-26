@@ -27,10 +27,9 @@ export default function Merchants() {
     // Type
     const matchesType = typeFilter === "all" || merchant.type === typeFilter;
 
-    // Price (Simple parsing for demo purposes - in real app, store price as number)
-    const priceString = merchant.price.replace(/[^0-9]/g, "");
-    const priceValue = parseInt(priceString) / 1000000; // Convert to millions
-    const matchesPrice = priceValue >= priceRange[0] && priceValue <= priceRange[1];
+    const minPriceValue = merchant.priceMin / 1000000; // Convert to millions
+    const maxPriceValue = (merchant.priceMax ?? merchant.priceMin) / 1000000;
+    const matchesPrice = maxPriceValue >= priceRange[0] && minPriceValue <= priceRange[1];
 
     return matchesSearch && matchesCategory && matchesType && matchesPrice;
   });

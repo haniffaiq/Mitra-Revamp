@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Link, useRoute } from "wouter";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
@@ -7,12 +8,23 @@ import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Star, MapPin, Globe, Share2, Phone, MessageCircle, ChevronRight, CheckCircle2, Info } from "lucide-react";
-import kebabLogo from "@assets/generated_images/logo_for_a_kebab_franchise.png";
 import heroImage from "@assets/generated_images/professional_business_partnership_banner_showing_growth_and_success.png";
+import { DUMMY_MERCHANTS } from "@/data/merchants";
+import NotFound from "@/pages/not-found";
+import { formatPriceRange } from "@/lib/utils";
 
 export default function MerchantDetail() {
   const [, params] = useRoute("/merchant/:id");
   const id = params?.id;
+  const merchant = DUMMY_MERCHANTS.find((item) => item.id === id);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+  }, [id]);
+
+  if (!merchant) {
+    return <NotFound />;
+  }
 
   return (
     <div className="min-h-screen bg-background font-sans">
@@ -22,7 +34,7 @@ export default function MerchantDetail() {
       <div className="container mx-auto px-4 py-4 text-sm text-muted-foreground">
         <Link href="/"><a className="hover:text-primary">Home</a></Link>
         <span className="mx-2">/</span>
-        <span className="text-foreground font-medium">Kebuli Abuya</span>
+        <span className="text-foreground font-medium">{merchant.name}</span>
       </div>
 
       <div className="container mx-auto px-4 md:px-6 pb-20">
@@ -35,11 +47,11 @@ export default function MerchantDetail() {
             <div className="bg-card rounded-2xl p-5 md:p-8 border border-border shadow-sm">
               <div className="flex flex-col sm:flex-row gap-5 md:gap-6 items-start sm:items-center">
                 <div className="w-20 h-20 md:w-32 md:h-32 rounded-full border-4 border-secondary p-1 bg-white shrink-0 mx-auto sm:mx-0">
-                  <img src={kebabLogo} alt="Logo" className="w-full h-full object-contain" />
+                  <img src={merchant.logoUrl} alt={`Logo ${merchant.name}`} className="w-full h-full object-contain" />
                 </div>
                 <div className="flex-1 space-y-2 w-full text-center sm:text-left">
                   <div className="flex items-center justify-between">
-                    <h1 className="text-2xl md:text-3xl font-bold text-foreground w-full sm:w-auto">Kebuli Abuya</h1>
+                    <h1 className="text-2xl md:text-3xl font-bold text-foreground w-full sm:w-auto">{merchant.name}</h1>
                     <div className="flex gap-2 hidden sm:flex">
                       <Button variant="ghost" size="icon" className="rounded-full"><Share2 size={18} /></Button>
                     </div>
@@ -48,13 +60,15 @@ export default function MerchantDetail() {
                     <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 gap-1 pl-1 pr-2">
                       <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" /> Online
                     </Badge>
-                    <div className="flex items-center gap-1 text-yellow-500 font-medium">
-                      <Star size={14} className="fill-current" /> 4.9
-                    </div>
+                    {merchant.rating && (
+                      <div className="flex items-center gap-1 text-yellow-500 font-medium">
+                        <Star size={14} className="fill-current" /> {merchant.rating}
+                      </div>
+                    )}
                     <span className="text-muted-foreground hidden sm:inline">•</span>
-                    <span className="text-muted-foreground">Food & Beverages</span>
+                    <span className="text-muted-foreground">{merchant.category}</span>
                     <span className="text-muted-foreground hidden sm:inline">•</span>
-                    <span className="text-muted-foreground">Est. 2019</span>
+                    <span className="text-muted-foreground">{merchant.type}</span>
                   </div>
                   <p className="text-muted-foreground pt-2 leading-relaxed text-sm md:text-base">
                     Suguhan istimewa di setiap acara. Peluang usaha bagi masyarakat yang ingin mendapatkan makanan berkualitas dengan harga terjangkau yang didukung oleh central kitchen terpercaya.
@@ -148,8 +162,10 @@ export default function MerchantDetail() {
 
                   <div className="space-y-1">
                     <p className="text-xs text-muted-foreground">Mulai Dari</p>
-                    <p className="text-2xl md:text-3xl font-bold text-primary">Rp 90.000.000</p>
-                    <p className="text-xs text-muted-foreground">- Rp 150.000.000</p>
+                    <p className="text-2xl md:text-3xl font-bold text-primary">
+                      {formatPriceRange(merchant.priceMin, merchant.priceMax)}
+                    </p>
+                    <p className="text-xs text-muted-foreground">BEP {merchant.bepMonths} Bulan</p>
                   </div>
 
                   <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 flex gap-3">

@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Star, TrendingUp, Info } from "lucide-react";
 import { MerchantProps } from "@/data/merchants";
+import { formatPriceRange } from "@/lib/utils";
 
 export function MerchantCard({ merchant }: { merchant: MerchantProps }) {
   return (
@@ -12,7 +13,7 @@ export function MerchantCard({ merchant }: { merchant: MerchantProps }) {
         <div className="flex items-start justify-between mb-6">
           <div className="relative">
             <div className="w-14 h-14 md:w-16 md:h-16 rounded-full border-2 border-border p-1 bg-white overflow-hidden group-hover:scale-105 transition-transform duration-300 shrink-0">
-              <img src={merchant.logo} alt={merchant.name} className="w-full h-full object-contain" />
+              <img src={merchant.logoUrl} alt={merchant.name} className="w-full h-full object-contain" />
             </div>
             {merchant.rating && (
               <div className="absolute -bottom-1 -right-1 bg-white shadow-sm border px-1.5 py-0.5 rounded-full flex items-center gap-0.5 text-[10px] font-bold text-foreground">
@@ -36,12 +37,14 @@ export function MerchantCard({ merchant }: { merchant: MerchantProps }) {
             <span className="text-muted-foreground">BEP (Estimasi)</span>
             <span className="font-semibold text-foreground flex items-center gap-1">
               <TrendingUp size={12} className="text-green-500" />
-              {merchant.bep}
+              {merchant.bepMonths} Bulan
             </span>
           </div>
           <div className="flex items-center justify-between text-xs">
             <span className="text-muted-foreground">Mulai dari</span>
-            <span className="font-bold text-primary">{merchant.price}</span>
+            <span className="font-bold text-primary">
+              {formatPriceRange(merchant.priceMin, merchant.priceMax)}
+            </span>
           </div>
         </div>
       </CardContent>
