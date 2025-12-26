@@ -7,6 +7,7 @@ import NotFound from "@/pages/not-found";
 import Home from "@/pages/home";
 import MerchantDetail from "@/pages/merchant-detail";
 import Insight from "@/pages/insight";
+import InsightDetail from "@/pages/insight-detail";
 import Login from "@/pages/login";
 import Register from "@/pages/register";
 import Merchants from "@/pages/merchants";
@@ -17,6 +18,7 @@ function Router() {
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/insight" component={Insight} />
+      <Route path="/insight/:id" component={InsightDetail} />
       <Route path="/merchants" component={Merchants} />
       <Route path="/become-merchant" component={BecomeMerchant} />
       <Route path="/merchant/:id" component={MerchantDetail} />

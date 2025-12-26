@@ -1,0 +1,83 @@
+import { useEffect } from "react";
+import { Link, useRoute } from "wouter";
+import { Navbar } from "@/components/navbar";
+import { Footer } from "@/components/footer";
+import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/card";
+import { Calendar, User } from "lucide-react";
+import { INSIGHT_ARTICLES } from "@/data/insights";
+import NotFound from "@/pages/not-found";
+
+export default function InsightDetail() {
+  const [, params] = useRoute("/insight/:id");
+  const id = params?.id;
+  const article = INSIGHT_ARTICLES.find(
+    (item) => item.id === id || item.slug === id
+  );
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+  }, [id]);
+
+  if (!article) {
+    return <NotFound />;
+  }
+
+  return (
+    <div className="min-h-screen bg-background font-sans">
+      <Navbar />
+
+      <div className="container mx-auto px-4 py-4 text-sm text-muted-foreground">
+        <Link href="/"><a className="hover:text-primary">Home</a></Link>
+        <span className="mx-2">/</span>
+        <Link href="/insight"><a className="hover:text-primary">Insight</a></Link>
+        <span className="mx-2">/</span>
+        <span className="text-foreground font-medium">{article.title}</span>
+      </div>
+
+      <div className="container mx-auto px-4 md:px-6 pb-20">
+        <div className="max-w-4xl mx-auto space-y-8">
+          <div className="space-y-4">
+            <Badge className="bg-primary/10 text-primary hover:bg-primary/20 border-primary/20">
+              {article.category}
+            </Badge>
+            <h1 className="text-3xl md:text-5xl font-bold text-foreground">
+              {article.title}
+            </h1>
+            <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
+              <span className="flex items-center gap-1">
+                <Calendar size={14} /> {article.date}
+              </span>
+              <span>•</span>
+              <span className="flex items-center gap-1">
+                <User size={14} /> {article.author}
+              </span>
+              <span>•</span>
+              <span>{article.readTime}</span>
+            </div>
+          </div>
+
+          <Card className="overflow-hidden border-border/60">
+            <div className="aspect-[16/9] overflow-hidden">
+              <img
+                src={article.image}
+                alt={article.title}
+                className="w-full h-full object-cover"
+              />
+            </div>
+          </Card>
+
+          <div className="prose prose-lg max-w-none text-foreground">
+            {article.content.map((paragraph, index) => (
+              <p key={index} className="text-muted-foreground leading-relaxed">
+                {paragraph}
+              </p>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <Footer />
+    </div>
+  );
+}

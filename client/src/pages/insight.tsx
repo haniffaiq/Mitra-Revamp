@@ -5,67 +5,11 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Calendar, User, ArrowRight, TrendingUp, DollarSign, Target, Megaphone } from "lucide-react";
-import news1 from "@assets/generated_images/business_strategy_meeting_with_charts.png";
-import news2 from "@assets/generated_images/indonesian_street_food_vendor_success_story.png";
-import news3 from "@assets/generated_images/digital_marketing_for_small_business.png";
-import news4 from "@assets/generated_images/financial_planning_for_business.png";
-
-const ARTICLES = [
-  {
-    id: 1,
-    title: "Tren Bisnis Franchise 2025: Apa yang Harus Diketahui?",
-    category: "Bisnis",
-    date: "18 Des 2025",
-    author: "Tim Mitranesia",
-    image: news1,
-    excerpt: "Menjelajahi peluang bisnis waralaba yang diprediksi akan booming di tahun mendatang. Simak analisis lengkapnya di sini.",
-    readTime: "5 min baca"
-  },
-  {
-    id: 2,
-    title: "Kisah Sukses UMKM: Dari Gerobak Menjadi Ruko",
-    category: "Inspirasi",
-    date: "15 Des 2025",
-    author: "Budi Santoso",
-    image: news2,
-    excerpt: "Perjalanan inspiratif Pak Joko membangun bisnis kuliner tradisionalnya hingga memiliki 5 cabang di Jabodetabek.",
-    readTime: "7 min baca"
-  },
-  {
-    id: 3,
-    title: "Pentingnya Digital Marketing untuk UMKM di Era Modern",
-    category: "Marketing",
-    date: "10 Des 2025",
-    author: "Sarah Wijaya",
-    image: news3,
-    excerpt: "Strategi pemasaran digital yang efektif dan hemat biaya untuk meningkatkan omzet bisnis kecil dan menengah.",
-    readTime: "6 min baca"
-  },
-  {
-    id: 4,
-    title: "Tips Mengelola Keuangan untuk Pemula Bisnis",
-    category: "Keuangan",
-    date: "05 Des 2025",
-    author: "Rina Finance",
-    image: news4,
-    excerpt: "Panduan praktis mengatur arus kas dan pembukuan sederhana agar bisnis tetap sehat dan profitable.",
-    readTime: "4 min baca"
-  },
-  {
-    id: 5,
-    title: "Mitranesia Meluncurkan Program Kemitraan Baru",
-    category: "Berita",
-    date: "01 Des 2025",
-    author: "Admin",
-    image: news1, // Reusing image for demo
-    excerpt: "Program inkubasi bisnis terbaru dari Mitranesia untuk membantu calon pengusaha memulai bisnis franchise pertama mereka.",
-    readTime: "3 min baca"
-  }
-];
+import { INSIGHT_ARTICLES } from "@/data/insights";
 
 export default function Insight() {
-  const featuredArticle = ARTICLES[0];
-  const recentArticles = ARTICLES.slice(1);
+  const featuredArticle = INSIGHT_ARTICLES[0];
+  const recentArticles = INSIGHT_ARTICLES.slice(1);
 
   return (
     <div className="min-h-screen bg-background font-sans">

@@ -1,52 +1,51 @@
-import { sql } from "drizzle-orm";
-import { boolean, index, integer, numeric, pgTable, text, timestamp, varchar } from "drizzle-orm/pg-core";
-import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
-export const users = pgTable("users", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  username: text("username").notNull().unique(),
-  password: text("password").notNull(),
-});
+export interface User {
+  id: string;
+  username: string;
+  password: string;
+}
 
-export const insertUserSchema = createInsertSchema(users).pick({
-  username: true,
-  password: true,
+export const insertUserSchema = z.object({
+  username: z.string().min(1),
+  password: z.string().min(8),
 });
 
 export type InsertUser = z.infer<typeof insertUserSchema>;
-export type User = typeof users.$inferSelect;
 
-export const merchants = pgTable(
-  "merchants",
-  {
-    id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-    name: text("name").notNull(),
-    slug: text("slug").notNull().unique(),
-    category: text("category").notNull(),
-    type: text("type").notNull(),
-    logoUrl: text("logo_url").notNull(),
-    bepMonths: integer("bep_months").notNull(),
-    priceMin: integer("price_min").notNull(),
-    priceMax: integer("price_max"),
-    rating: numeric("rating", { precision: 2, scale: 1 }),
-    isActive: boolean("is_active").notNull().default(true),
-    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
-    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
-  },
-  (table) => ({
-    slugIdx: index("merchants_slug_idx").on(table.slug),
-    categoryIdx: index("merchants_category_idx").on(table.category),
-    typeIdx: index("merchants_type_idx").on(table.type),
-    priceMinIdx: index("merchants_price_min_idx").on(table.priceMin),
-  })
-);
+export type MerchantPartnershipType =
+  | "Self Managed"
+  | "Semi-Autopilot"
+  | "Full-Autopilot"
+  | "Auto Pilot";
 
-export const insertMerchantSchema = createInsertSchema(merchants).omit({
-  id: true,
-  createdAt: true,
-  updatedAt: true,
+export interface Merchant {
+  id: string;
+  name: string;
+  slug: string;
+  category: string;
+  type: MerchantPartnershipType;
+  logoUrl: string;
+  bepMonths: number;
+  priceMin: number;
+  priceMax?: number | null;
+  rating?: number | null;
+  isActive: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export const insertMerchantSchema = z.object({
+  name: z.string().min(1),
+  slug: z.string().min(1),
+  category: z.string().min(1),
+  type: z.enum(["Self Managed", "Semi-Autopilot", "Full-Autopilot", "Auto Pilot"]),
+  logoUrl: z.string().url(),
+  bepMonths: z.number().int().positive(),
+  priceMin: z.number().int().positive(),
+  priceMax: z.number().int().positive().optional(),
+  rating: z.number().min(0).max(5).optional(),
+  isActive: z.boolean().optional(),
 });
 
 export type InsertMerchant = z.infer<typeof insertMerchantSchema>;
-export type Merchant = typeof merchants.$inferSelect;
