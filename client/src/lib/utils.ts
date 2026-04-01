@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
+import type { MerchantPackage } from "@/data/merchants"
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -18,4 +19,12 @@ export function formatPriceRange(min: number, max?: number) {
     return `${formatIdr(min)} - ${formatIdr(max)}`
   }
   return formatIdr(min)
+}
+
+export function getPackagePriceRange(packages: MerchantPackage[]) {
+  const prices = packages.map((pkg) => pkg.price)
+  return {
+    min: Math.min(...prices),
+    max: Math.max(...prices),
+  }
 }

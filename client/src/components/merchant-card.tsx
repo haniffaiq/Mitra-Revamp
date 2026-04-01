@@ -4,9 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Star, TrendingUp, Info } from "lucide-react";
 import { MerchantProps } from "@/data/merchants";
-import { formatPriceRange } from "@/lib/utils";
+import { formatPriceRange, getPackagePriceRange } from "@/lib/utils";
 
 export function MerchantCard({ merchant }: { merchant: MerchantProps }) {
+  const { min, max } = getPackagePriceRange(merchant.packages);
+
   return (
     <Card className="group overflow-hidden border-border/60 bg-card/50 hover:bg-card hover:shadow-xl hover:border-primary/20 transition-all duration-300 flex flex-col h-full">
       <CardContent className="p-5 md:p-6 flex-1">
@@ -43,7 +45,7 @@ export function MerchantCard({ merchant }: { merchant: MerchantProps }) {
           <div className="flex items-center justify-between text-xs">
             <span className="text-muted-foreground">Mulai dari</span>
             <span className="font-bold text-primary">
-              {formatPriceRange(merchant.priceMin, merchant.priceMax)}
+              {formatPriceRange(min, max)}
             </span>
           </div>
         </div>

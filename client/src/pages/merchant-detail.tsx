@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link, useRoute } from "wouter";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
@@ -11,16 +11,39 @@ import { Star, MapPin, Globe, Share2, Phone, MessageCircle, ChevronRight, CheckC
 import heroImage from "@assets/generated_images/professional_business_partnership_banner_showing_growth_and_success.png";
 import { DUMMY_MERCHANTS } from "@/data/merchants";
 import NotFound from "@/pages/not-found";
-import { formatPriceRange } from "@/lib/utils";
+import { formatIdr, formatPriceRange, getPackagePriceRange } from "@/lib/utils";
 
 export default function MerchantDetail() {
   const [, params] = useRoute("/merchant/:id");
   const id = params?.id;
   const merchant = DUMMY_MERCHANTS.find((item) => item.id === id);
+  const [selectedPackageId, setSelectedPackageId] = useState("");
+
+  const selectedPackage = useMemo(() => {
+    if (!merchant) {
+      return undefined;
+    }
+
+    return merchant.packages.find((pkg) => pkg.id === selectedPackageId) ?? merchant.packages[0];
+  }, [merchant, selectedPackageId]);
+
+  const merchantPriceRange = useMemo(() => {
+    if (!merchant) {
+      return undefined;
+    }
+
+    return getPackagePriceRange(merchant.packages);
+  }, [merchant]);
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
   }, [id]);
+
+  useEffect(() => {
+    if (merchant) {
+      setSelectedPackageId(merchant.packages[0]?.id ?? "");
+    }
+  }, [merchant]);
 
   if (!merchant) {
     return <NotFound />;
@@ -132,6 +155,38 @@ export default function MerchantDetail() {
                   </div>
                 </div>
               </TabsContent>
+
+              <TabsContent value="packages" className="pt-6">
+                <div className="grid gap-4 md:grid-cols-2">
+                  {merchant.packages.map((pkg) => {
+                    const isActive = selectedPackage?.id === pkg.id;
+
+                    return (
+                      <button
+                        key={pkg.id}
+                        type="button"
+                        onClick={() => setSelectedPackageId(pkg.id)}
+                        className={`rounded-xl border p-5 text-left transition-all ${
+                          isActive
+                            ? "border-primary bg-primary/5 shadow-sm"
+                            : "border-border bg-card hover:border-primary/40"
+                        }`}
+                      >
+                        <div className="flex items-start justify-between gap-4">
+                          <div>
+                            <h3 className="text-base font-semibold text-foreground">{pkg.name}</h3>
+                            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{pkg.description}</p>
+                          </div>
+                          {isActive && (
+                            <Badge className="bg-primary text-white hover:bg-primary">Dipilih</Badge>
+                          )}
+                        </div>
+                        <p className="mt-4 text-lg font-bold text-primary">{formatIdr(pkg.price)}</p>
+                      </button>
+                    );
+                  })}
+                </div>
+              </TabsContent>
             </Tabs>
 
           </div>
@@ -148,14 +203,16 @@ export default function MerchantDetail() {
                 <div className="p-5 md:p-6 space-y-6">
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-muted-foreground">Tipe Paket</label>
-                    <Select defaultValue="paket1">
+                    <Select value={selectedPackageId} onValueChange={setSelectedPackageId}>
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Pilih paket" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="paket1">Paket Silver (Booth)</SelectItem>
-                        <SelectItem value="paket2">Paket Gold (Mini Resto)</SelectItem>
-                        <SelectItem value="paket3">Paket Platinum (Resto)</SelectItem>
+                        {merchant.packages.map((pkg) => (
+                          <SelectItem key={pkg.id} value={pkg.id}>
+                            {pkg.name}
+                          </SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                   </div>
@@ -163,10 +220,23 @@ export default function MerchantDetail() {
                   <div className="space-y-1">
                     <p className="text-xs text-muted-foreground">Mulai Dari</p>
                     <p className="text-2xl md:text-3xl font-bold text-primary">
-                      {formatPriceRange(merchant.priceMin, merchant.priceMax)}
+                      {selectedPackage
+                        ? formatIdr(selectedPackage.price)
+                        : merchantPriceRange
+                          ? formatPriceRange(merchantPriceRange.min, merchantPriceRange.max)
+                          : "-"}
                     </p>
                     <p className="text-xs text-muted-foreground">BEP {merchant.bepMonths} Bulan</p>
                   </div>
+
+                  {selectedPackage && (
+                    <div className="rounded-lg border border-border bg-muted/30 p-3">
+                      <p className="text-xs font-semibold text-foreground">{selectedPackage.name}</p>
+                      <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                        {selectedPackage.description}
+                      </p>
+                    </div>
+                  )}
 
                   <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 flex gap-3">
                     <div className="bg-amber-100 p-1.5 rounded-full h-fit text-amber-600 shrink-0">

@@ -19,6 +19,13 @@ export type MerchantPartnershipType =
   | "Full-Autopilot"
   | "Auto Pilot";
 
+export interface MerchantPackage {
+  id: string;
+  name: string;
+  price: number;
+  description: string;
+}
+
 export interface Merchant {
   id: string;
   name: string;
@@ -27,8 +34,7 @@ export interface Merchant {
   type: MerchantPartnershipType;
   logoUrl: string;
   bepMonths: number;
-  priceMin: number;
-  priceMax?: number | null;
+  packages: MerchantPackage[];
   rating?: number | null;
   isActive: boolean;
   createdAt?: string;
@@ -42,8 +48,12 @@ export const insertMerchantSchema = z.object({
   type: z.enum(["Self Managed", "Semi-Autopilot", "Full-Autopilot", "Auto Pilot"]),
   logoUrl: z.string().url(),
   bepMonths: z.number().int().positive(),
-  priceMin: z.number().int().positive(),
-  priceMax: z.number().int().positive().optional(),
+  packages: z.array(z.object({
+    id: z.string().min(1),
+    name: z.string().min(1),
+    price: z.number().int().positive(),
+    description: z.string().min(1),
+  })).min(1),
   rating: z.number().min(0).max(5).optional(),
   isActive: z.boolean().optional(),
 });

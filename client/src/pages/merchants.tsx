@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Slider } from "@/components/ui/slider";
 import { Badge } from "@/components/ui/badge";
 import { Search, Filter, X } from "lucide-react";
-import { DUMMY_MERCHANTS } from "@/data/merchants";
+import { DUMMY_MERCHANTS, getMerchantMaxPrice, getMerchantMinPrice } from "@/data/merchants";
 
 export default function Merchants() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -17,22 +17,19 @@ export default function Merchants() {
   const [priceRange, setPriceRange] = useState([0, 500]); // In Millions
 
   // Filter Logic
-  const filteredMerchants = DUMMY_MERCHANTS.filter((merchant) => {
-    // Search
-    const matchesSearch = merchant.name.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    // Category
-    const matchesCategory = categoryFilter === "all" || merchant.category === categoryFilter;
+  const filteredMerchants = DUMMY_MERCHANTS
+    .filter((merchant) => {
+      const matchesSearch = merchant.name.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesCategory = categoryFilter === "all" || merchant.category === categoryFilter;
+      const matchesType = typeFilter === "all" || merchant.type === typeFilter;
 
-    // Type
-    const matchesType = typeFilter === "all" || merchant.type === typeFilter;
+      const minPriceValue = getMerchantMinPrice(merchant) / 1000000;
+      const maxPriceValue = getMerchantMaxPrice(merchant) / 1000000;
+      const matchesPrice = maxPriceValue >= priceRange[0] && minPriceValue <= priceRange[1];
 
-    const minPriceValue = merchant.priceMin / 1000000; // Convert to millions
-    const maxPriceValue = (merchant.priceMax ?? merchant.priceMin) / 1000000;
-    const matchesPrice = maxPriceValue >= priceRange[0] && minPriceValue <= priceRange[1];
-
-    return matchesSearch && matchesCategory && matchesType && matchesPrice;
-  });
+      return matchesSearch && matchesCategory && matchesType && matchesPrice;
+    })
+    .sort((a, b) => getMerchantMinPrice(a) - getMerchantMinPrice(b));
 
   const categories = Array.from(new Set(DUMMY_MERCHANTS.map(m => m.category)));
   const types = Array.from(new Set(DUMMY_MERCHANTS.map(m => m.type)));
