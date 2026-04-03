@@ -18,6 +18,7 @@ export interface MerchantProps {
   category: string;
   logoUrl: string;
   bepMonths: number;
+  isTopMerchant?: boolean;
   rating?: number;
   type: MerchantPartnershipType;
   packages: MerchantPackage[];
@@ -62,7 +63,7 @@ export const DUMMY_MERCHANTS: MerchantProps[] = [
     id: "0d4243f6-6d9b-45c7-b6d5-0f8bb4f5a201",
     name: "Soc Clean",
     slug: "soc-clean",
-    logoUrl: "https://placehold.co/500x400.png?text=Soc+Clean",
+    logoUrl: "https://peluang-images.s3.ap-southeast-1.amazonaws.com/mitranesia/soc_clean.png",
     category: "Cleaning Service",
     type: "Semi-Autopilot",
     bepMonths: 8,
@@ -106,7 +107,7 @@ export const DUMMY_MERCHANTS: MerchantProps[] = [
     id: "87bfc62c-0423-4c43-85b8-9ee3944a7b06",
     name: "Pixify Studio",
     slug: "pixify-studio",
-    logoUrl: "https://placehold.co/500x400.png?text=Pixify+Studio",
+    logoUrl: "https://peluang-images.s3.ap-southeast-1.amazonaws.com/mitranesia/pixify.png",
     category: "Creative Studio",
     type: "Semi-Autopilot",
     bepMonths: 16,
@@ -120,9 +121,10 @@ export const DUMMY_MERCHANTS: MerchantProps[] = [
     id: "bf5931ab-c2fc-4061-a8f8-657e33f2d809",
     name: "Deftbarber",
     slug: "deftbarber",
-    logoUrl: "https://placehold.co/500x400.png?text=Deftbarber",
+    logoUrl: "https://peluang-images.s3.ap-southeast-1.amazonaws.com/mitranesia/daft_barber.png",
     category: "Beauty/Self Care",
     type: "Full-Autopilot",
+    isTopMerchant:true,
     bepMonths: 16,
     packages: [
       createPackage("Paket Silver", 69000000, "Paket barbershop dasar untuk outlet dengan kebutuhan operasional inti."),
@@ -134,7 +136,7 @@ export const DUMMY_MERCHANTS: MerchantProps[] = [
     id: "0a18da27-4a07-4c43-bc2e-2f5065d7b911",
     name: "Mafia Seblak",
     slug: "mafia-seblak",
-    logoUrl: "https://placehold.co/500x400.png?text=Mafia+Seblak",
+    logoUrl: "https://peluang-images.s3.ap-southeast-1.amazonaws.com/mitranesia/mafia_seblak.jpg",
     category: "Food & Beverages",
     type: "Full-Autopilot",
     bepMonths: 18,
@@ -149,9 +151,10 @@ export const DUMMY_MERCHANTS: MerchantProps[] = [
     id: "473e4cb0-7314-423d-aeb4-ebd5347bfe13",
     name: "Doyan Ayam",
     slug: "doyan-ayam",
-    logoUrl: "https://placehold.co/500x400.png?text=Doyan+Ayam",
+    logoUrl: "https://peluang-images.s3.ap-southeast-1.amazonaws.com/mitranesia/doyan_ayam.png",
     category: "Food & Beverages",
     type: "Full-Autopilot",
+    isTopMerchant:true,
     bepMonths: 16,
     packages: [
       createPackage("Paket Starter", 99000000, "Paket awal untuk memulai outlet Doyan Ayam."),
@@ -163,7 +166,7 @@ export const DUMMY_MERCHANTS: MerchantProps[] = [
     id: "08433016-7f86-4b0b-b45a-b39776e2ba17",
     name: "Laundry Hari Ini",
     slug: "laundry-hari-ini",
-    logoUrl: "https://placehold.co/500x400.png?text=Laundry+Hari+Ini",
+    logoUrl: "https://peluang-images.s3.ap-southeast-1.amazonaws.com/mitranesia/loundry_harinin.png",
     category: "Laundry Service",
     type: "Auto Pilot",
     bepMonths: 18,
@@ -176,7 +179,7 @@ export const DUMMY_MERCHANTS: MerchantProps[] = [
     id: "eff03ba1-0476-4d65-ad37-f7c6de806622",
     name: "Pempek Farina",
     slug: "pempek-farina",
-    logoUrl: "https://placehold.co/500x400.png?text=Pempek+Farina",
+    logoUrl: "https://peluang-images.s3.ap-southeast-1.amazonaws.com/mitranesia/pempek_farina.jpg",
     category: "Food & Beverages",
     type: "Auto Pilot",
     bepMonths: 24,
@@ -194,6 +197,7 @@ export const DUMMY_MERCHANTS: MerchantProps[] = [
     category: "Food & Beverages",
     type: "Self Managed",
     bepMonths: 12,
+    isTopMerchant: true,
     rating: 4.9,
     packages: createDefaultPackages(90000000),
   },
@@ -205,6 +209,7 @@ export const DUMMY_MERCHANTS: MerchantProps[] = [
     category: "Beauty/Self Care",
     type: "Semi-Autopilot",
     bepMonths: 12,
+    isTopMerchant: true,
     rating: 4.8,
     packages: createDefaultPackages(256000000),
   },
@@ -304,6 +309,7 @@ export const DUMMY_MERCHANTS: MerchantProps[] = [
     category: "Food & Beverages",
     type: "Semi-Autopilot",
     bepMonths: 12,
+    isTopMerchant: true,
     rating: 4.9,
     packages: createDefaultPackages(123000000),
   },
@@ -315,6 +321,7 @@ export const DUMMY_MERCHANTS: MerchantProps[] = [
     category: "Food & Beverages",
     type: "Semi-Autopilot",
     bepMonths: 12,
+    isTopMerchant: true,
     rating: 4.8,
     packages: createDefaultPackages(22000000),
   },

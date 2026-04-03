@@ -51,7 +51,7 @@ export default function Home() {
   );
 
   // Split merchants into categories
-  const topMerchants = DUMMY_MERCHANTS.filter(m => parseFloat(m.rating?.toString() || "0") >= 4.8);
+  const topMerchants = DUMMY_MERCHANTS.filter((merchant) => merchant.isTopMerchant);
   const recommendedMerchants = DUMMY_MERCHANTS.filter(m => m.type.includes("Autopilot") || m.rating === 4.7);
   const otherMerchants = DUMMY_MERCHANTS;
 
@@ -165,7 +165,7 @@ export default function Home() {
             </Link>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-            {topMerchants.slice(0, 4).map((merchant) => (
+            {topMerchants.slice(0, 8).map((merchant) => (
               <MerchantCard key={merchant.id} merchant={merchant} />
             ))}
           </div>
