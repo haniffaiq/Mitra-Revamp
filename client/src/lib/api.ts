@@ -1,5 +1,5 @@
 export const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL?.replace(/\/$/, "") ?? "https://api.mitranesia.com";
+  import.meta.env.VITE_API_BASE_URL?.replace(/\/$/, "") ?? "https://api.mitranesia.id";
 
 export interface ClientMerchantPackage {
   id: string;
