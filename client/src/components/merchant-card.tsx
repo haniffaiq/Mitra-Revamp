@@ -3,10 +3,10 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Star, TrendingUp, Info } from "lucide-react";
-import { MerchantProps } from "@/data/merchants";
+import { ClientMerchant } from "@/lib/api";
 import { formatPriceRange, getPackagePriceRange } from "@/lib/utils";
 
-export function MerchantCard({ merchant }: { merchant: MerchantProps }) {
+export function MerchantCard({ merchant }: { merchant: ClientMerchant }) {
   const { min, max } = getPackagePriceRange(merchant.packages);
 
   return (

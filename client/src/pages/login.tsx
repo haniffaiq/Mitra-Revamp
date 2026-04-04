@@ -5,30 +5,44 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ArrowLeft, Eye, EyeOff } from "lucide-react";
 import bgImage from "@assets/generated_images/professional_handshake_business_partnership_background.png";
+import { useAuth } from "@/lib/auth";
+import { useToast } from "@/hooks/use-toast";
 
 export default function Login() {
   const [, setLocation] = useLocation();
   const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { login } = useAuth();
+  const { toast } = useToast();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Mock login logic
-    setLocation("/");
+    setIsSubmitting(true);
+    try {
+      await login(email, password);
+      const redirectTo = new URLSearchParams(window.location.search).get("redirect") || "/";
+      toast({ title: "Berhasil masuk", description: "Akun Anda sudah aktif." });
+      setLocation(redirectTo);
+    } catch (error) {
+      toast({
+        title: "Gagal masuk",
+        description: error instanceof Error ? error.message : "Periksa email dan password Anda.",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
     <div className="min-h-screen bg-background flex flex-col md:flex-row font-sans">
-      {/* Left Panel - Image */}
       <div className="hidden md:flex md:w-1/2 lg:w-2/3 bg-primary relative overflow-hidden">
-        <img 
-          src={bgImage} 
-          alt="Login Background" 
-          className="absolute inset-0 w-full h-full object-cover opacity-80 mix-blend-multiply"
-        />
+        <img src={bgImage} alt="Login Background" className="absolute inset-0 w-full h-full object-cover opacity-80 mix-blend-multiply" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
         <div className="relative z-10 p-12 flex flex-col justify-end h-full text-white space-y-4">
           <h1 className="text-4xl lg:text-5xl font-bold leading-tight">
-            Selamat Datang Kembali <br/> di Mitranesia
+            Selamat Datang Kembali <br /> di Mitranesia
           </h1>
           <p className="text-white/80 text-lg max-w-xl">
             Platform terpercaya untuk menemukan dan mengembangkan bisnis franchise impian Anda. Terhubung dengan ribuan merchant sukses hari ini.
@@ -36,7 +50,6 @@ export default function Login() {
         </div>
       </div>
 
-      {/* Right Panel - Form */}
       <div className="flex-1 flex flex-col justify-center p-6 md:p-12 lg:p-16 relative">
         <Button variant="ghost" className="absolute top-6 left-6 gap-2" onClick={() => setLocation("/")}>
           <ArrowLeft size={16} /> Kembali
@@ -51,21 +64,15 @@ export default function Login() {
           <form onSubmit={handleLogin} className="space-y-6">
             <div className="space-y-2">
               <Label htmlFor="email">Email Address</Label>
-              <Input id="email" type="email" placeholder="nama@email.com" required />
+              <Input id="email" type="email" placeholder="nama@email.com" required value={email} onChange={(e) => setEmail(e.target.value)} />
             </div>
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <Label htmlFor="password">Password</Label>
-                <a href="#" className="text-xs text-primary hover:underline font-medium">Lupa Password?</a>
               </div>
               <div className="relative">
-                <Input 
-                  id="password" 
-                  type={showPassword ? "text" : "password"} 
-                  placeholder="••••••••" 
-                  required 
-                />
-                <button 
+                <Input id="password" type={showPassword ? "text" : "password"} placeholder="••••••••" required value={password} onChange={(e) => setPassword(e.target.value)} />
+                <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
@@ -74,7 +81,7 @@ export default function Login() {
                 </button>
               </div>
             </div>
-            <Button type="submit" className="w-full h-11 text-base bg-primary hover:bg-primary/90 text-white shadow-lg">
+            <Button type="submit" className="w-full h-11 text-base bg-primary hover:bg-primary/90 text-white shadow-lg" disabled={isSubmitting}>
               Masuk
             </Button>
           </form>

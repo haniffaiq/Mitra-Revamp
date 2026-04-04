@@ -1,12 +1,14 @@
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
-import { Search, Menu } from "lucide-react";
+import { Menu } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useState } from "react";
+import { useAuth } from "@/lib/auth";
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [, setLocation] = useLocation();
+  const { user, logout } = useAuth();
 
   return (
     <nav className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-md">
@@ -17,7 +19,6 @@ export function Navbar() {
           </a>
         </Link>
 
-        {/* Desktop Menu */}
         <div className="hidden md:flex items-center gap-6 text-sm font-medium text-muted-foreground">
           <Link href="/insight"><a className="hover:text-primary transition-colors">Insight</a></Link>
           <Link href="/merchants"><a className="hover:text-primary transition-colors">Merchant Kami</a></Link>
@@ -28,18 +29,36 @@ export function Navbar() {
         </div>
 
         <div className="flex items-center gap-3">
-          <Link href="/login">
-            <Button variant="ghost" size="sm" className="hidden sm:flex text-muted-foreground hover:text-primary">
-              Masuk
-            </Button>
-          </Link>
-          <Link href="/register">
-            <Button size="sm" className="hidden sm:flex bg-primary hover:bg-primary/90 text-white shadow-md">
-              Daftar
-            </Button>
-          </Link>
+          {user ? (
+            <>
+              <span className="hidden sm:inline text-sm text-muted-foreground">{user.full_name}</span>
+              <Button
+                variant="outline"
+                size="sm"
+                className="hidden sm:flex"
+                onClick={() => {
+                  logout();
+                  setLocation("/");
+                }}
+              >
+                Keluar
+              </Button>
+            </>
+          ) : (
+            <>
+              <Link href="/login">
+                <Button variant="ghost" size="sm" className="hidden sm:flex text-muted-foreground hover:text-primary">
+                  Masuk
+                </Button>
+              </Link>
+              <Link href="/register">
+                <Button size="sm" className="hidden sm:flex bg-primary hover:bg-primary/90 text-white shadow-md">
+                  Daftar
+                </Button>
+              </Link>
+            </>
+          )}
 
-          {/* Mobile Menu Trigger */}
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" className="md:hidden text-foreground">
@@ -63,12 +82,31 @@ export function Navbar() {
                 </div>
                 <div className="h-px bg-border my-2" />
                 <div className="flex flex-col gap-3">
-                  <Button variant="outline" className="w-full justify-center" onClick={() => { setIsOpen(false); setLocation("/login"); }}>
-                    Masuk
-                  </Button>
-                  <Button className="w-full justify-center bg-primary hover:bg-primary/90 text-white" onClick={() => { setIsOpen(false); setLocation("/register"); }}>
-                    Daftar
-                  </Button>
+                  {user ? (
+                    <>
+                      <div className="text-sm text-muted-foreground">{user.full_name}</div>
+                      <Button
+                        variant="outline"
+                        className="w-full justify-center"
+                        onClick={() => {
+                          logout();
+                          setIsOpen(false);
+                          setLocation("/");
+                        }}
+                      >
+                        Keluar
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <Button variant="outline" className="w-full justify-center" onClick={() => { setIsOpen(false); setLocation("/login"); }}>
+                        Masuk
+                      </Button>
+                      <Button className="w-full justify-center bg-primary hover:bg-primary/90 text-white" onClick={() => { setIsOpen(false); setLocation("/register"); }}>
+                        Daftar
+                      </Button>
+                    </>
+                  )}
                 </div>
               </div>
             </SheetContent>

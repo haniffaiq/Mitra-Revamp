@@ -1,27 +1,29 @@
 import { useEffect } from "react";
 import { Link, useRoute } from "wouter";
+import { useQuery } from "@tanstack/react-query";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Calendar, User } from "lucide-react";
-import { INSIGHT_ARTICLES } from "@/data/insights";
+import { ClientInsightArticle, fetchJson } from "@/lib/api";
 import NotFound from "@/pages/not-found";
 
 export default function InsightDetail() {
   const [, params] = useRoute("/insight/:id");
   const id = params?.id;
-  const article = INSIGHT_ARTICLES.find(
-    (item) => item.id === id || item.slug === id
-  );
+  const { data: article, isError } = useQuery({
+    queryKey: ["client-insight-detail", id],
+    queryFn: () => fetchJson<ClientInsightArticle>(`/api/client/insights/${id}`),
+    enabled: Boolean(id),
+  });
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
   }, [id]);
 
-  if (!article) {
-    return <NotFound />;
-  }
+  if (isError) return <NotFound />;
+  if (!article) return null;
 
   return (
     <div className="min-h-screen bg-background font-sans">
@@ -59,11 +61,7 @@ export default function InsightDetail() {
 
           <Card className="overflow-hidden border-border/60">
             <div className="aspect-[16/9] overflow-hidden">
-              <img
-                src={article.image}
-                alt={article.title}
-                className="w-full h-full object-cover"
-              />
+              <img src={article.image} alt={article.title} className="w-full h-full object-cover" />
             </div>
           </Card>
 

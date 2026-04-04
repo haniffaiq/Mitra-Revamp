@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link, useRoute } from "wouter";
+import { Link, useLocation, useRoute } from "wouter";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { Button } from "@/components/ui/button";
@@ -7,31 +8,37 @@ import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Star, MapPin, Globe, Share2, Phone, MessageCircle, ChevronRight, CheckCircle2, Info } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import { Star, Share2, CheckCircle2, Info } from "lucide-react";
 import heroImage from "@assets/generated_images/professional_business_partnership_banner_showing_growth_and_success.png";
-import { DUMMY_MERCHANTS } from "@/data/merchants";
 import NotFound from "@/pages/not-found";
+import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/lib/auth";
+import { ClientMerchant, DetailResponse, fetchJson, postJson } from "@/lib/api";
 import { formatIdr, formatPriceRange, getPackagePriceRange } from "@/lib/utils";
 
 export default function MerchantDetail() {
   const [, params] = useRoute("/merchant/:id");
+  const [, setLocation] = useLocation();
   const id = params?.id;
-  const merchant = DUMMY_MERCHANTS.find((item) => item.id === id);
+  const { token, user } = useAuth();
+  const { toast } = useToast();
   const [selectedPackageId, setSelectedPackageId] = useState("");
+  const [message, setMessage] = useState("");
+
+  const { data: merchant, isLoading, isError } = useQuery({
+    queryKey: ["client-merchant-detail", id],
+    queryFn: () => fetchJson<ClientMerchant>(`/api/client/merchants/${id}`),
+    enabled: Boolean(id),
+  });
 
   const selectedPackage = useMemo(() => {
-    if (!merchant) {
-      return undefined;
-    }
-
+    if (!merchant) return undefined;
     return merchant.packages.find((pkg) => pkg.id === selectedPackageId) ?? merchant.packages[0];
   }, [merchant, selectedPackageId]);
 
   const merchantPriceRange = useMemo(() => {
-    if (!merchant) {
-      return undefined;
-    }
-
+    if (!merchant) return undefined;
     return getPackagePriceRange(merchant.packages);
   }, [merchant]);
 
@@ -45,15 +52,50 @@ export default function MerchantDetail() {
     }
   }, [merchant]);
 
-  if (!merchant) {
-    return <NotFound />;
+  const inquiryMutation = useMutation({
+    mutationFn: async (inquiryType: string) => {
+      if (!merchant) throw new Error("Merchant tidak ditemukan");
+      return postJson<DetailResponse<{ id: string }>>(
+        "/api/client/merchant-inquiries",
+        {
+          merchant_id: merchant.id,
+          package_name: selectedPackage?.name,
+          inquiry_type: inquiryType,
+          message,
+        },
+        token ?? undefined,
+      );
+    },
+    onSuccess: () => {
+      setMessage("");
+      toast({
+        title: "Permintaan terkirim",
+        description: "Tim Mitranesia akan menindaklanjuti minat Anda ke merchant ini.",
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Gagal mengirim permintaan",
+        description: error instanceof Error ? error.message : "Terjadi kesalahan.",
+      });
+    },
+  });
+
+  function handleInquiry(inquiryType: string) {
+    if (!token) {
+      setLocation(`/login?redirect=${encodeURIComponent(window.location.pathname)}`);
+      return;
+    }
+    inquiryMutation.mutate(inquiryType);
   }
+
+  if (isError) return <NotFound />;
+  if (!merchant) return null;
 
   return (
     <div className="min-h-screen bg-background font-sans">
       <Navbar />
-      
-      {/* Breadcrumb */}
+
       <div className="container mx-auto px-4 py-4 text-sm text-muted-foreground">
         <Link href="/"><a className="hover:text-primary">Home</a></Link>
         <span className="mx-2">/</span>
@@ -62,11 +104,7 @@ export default function MerchantDetail() {
 
       <div className="container mx-auto px-4 md:px-6 pb-20">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          
-          {/* Main Content (Left) */}
           <div className="lg:col-span-8 space-y-6 md:space-y-8">
-            
-            {/* Header Card */}
             <div className="bg-card rounded-2xl p-5 md:p-8 border border-border shadow-sm">
               <div className="flex flex-col sm:flex-row gap-5 md:gap-6 items-start sm:items-center">
                 <div className="w-20 h-20 md:w-32 md:h-32 rounded-full border-4 border-secondary p-1 bg-white shrink-0 mx-auto sm:mx-0">
@@ -94,18 +132,12 @@ export default function MerchantDetail() {
                     <span className="text-muted-foreground">{merchant.type}</span>
                   </div>
                   <p className="text-muted-foreground pt-2 leading-relaxed text-sm md:text-base">
-                    Suguhan istimewa di setiap acara. Peluang usaha bagi masyarakat yang ingin mendapatkan makanan berkualitas dengan harga terjangkau yang didukung oleh central kitchen terpercaya.
+                    {selectedPackage?.description ?? "Informasi merchant sedang dimuat."}
                   </p>
-                  
-                  {/* Mobile Only Share Button */}
-                  <div className="sm:hidden pt-2 flex justify-center">
-                    <Button variant="outline" size="sm" className="w-full gap-2"><Share2 size={16} /> Bagikan</Button>
-                  </div>
                 </div>
               </div>
             </div>
 
-            {/* Media Gallery */}
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
               <div className="col-span-2 md:col-span-1 aspect-video rounded-xl overflow-hidden bg-muted relative group cursor-pointer shadow-sm">
                 <img src={heroImage} alt="Gallery 1" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
@@ -119,16 +151,14 @@ export default function MerchantDetail() {
               </div>
             </div>
 
-            {/* Details Tabs */}
             <Tabs defaultValue="about" className="w-full">
               <div className="overflow-x-auto pb-2 -mx-4 px-4 sm:mx-0 sm:px-0 hide-scrollbar">
                 <TabsList className="w-full justify-start border-b border-border bg-transparent p-0 h-auto rounded-none gap-6 inline-flex min-w-max sm:min-w-0">
                   <TabsTrigger value="about" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:text-primary px-0 py-3 bg-transparent font-medium text-sm md:text-base shadow-none">Tentang</TabsTrigger>
                   <TabsTrigger value="packages" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:text-primary px-0 py-3 bg-transparent font-medium text-sm md:text-base shadow-none">Paket Kemitraan</TabsTrigger>
-                  <TabsTrigger value="reviews" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:text-primary px-0 py-3 bg-transparent font-medium text-sm md:text-base shadow-none">Ulasan</TabsTrigger>
                 </TabsList>
               </div>
-              
+
               <TabsContent value="about" className="pt-6 space-y-6">
                 <div className="prose prose-sm max-w-none text-muted-foreground">
                   <h3 className="text-foreground font-semibold text-lg">Keunggulan Bermitra</h3>
@@ -139,20 +169,14 @@ export default function MerchantDetail() {
                       "Support marketing nasional",
                       "Harga jual terjangkau, margin tinggi",
                       "Tanpa royalty fee bulanan",
-                      "Training karyawan gratis"
-                    ].map((item, i) => (
-                      <li key={i} className="flex items-start gap-2 text-sm md:text-base">
+                      "Training karyawan gratis",
+                    ].map((item) => (
+                      <li key={item} className="flex items-start gap-2 text-sm md:text-base">
                         <CheckCircle2 size={18} className="text-primary mt-0.5 shrink-0" />
                         <span>{item}</span>
                       </li>
                     ))}
                   </ul>
-                  
-                  <h3 className="text-foreground font-semibold text-lg mt-8">Media Sosial</h3>
-                  <div className="flex flex-wrap gap-4 mt-2">
-                    <Button variant="outline" size="sm" className="gap-2"><Globe size={14}/> Website</Button>
-                    <Button variant="outline" size="sm" className="gap-2"><Share2 size={14}/> Instagram</Button>
-                  </div>
                 </div>
               </TabsContent>
 
@@ -160,16 +184,13 @@ export default function MerchantDetail() {
                 <div className="grid gap-4 md:grid-cols-2">
                   {merchant.packages.map((pkg) => {
                     const isActive = selectedPackage?.id === pkg.id;
-
                     return (
                       <button
                         key={pkg.id}
                         type="button"
                         onClick={() => setSelectedPackageId(pkg.id)}
                         className={`rounded-xl border p-5 text-left transition-all ${
-                          isActive
-                            ? "border-primary bg-primary/5 shadow-sm"
-                            : "border-border bg-card hover:border-primary/40"
+                          isActive ? "border-primary bg-primary/5 shadow-sm" : "border-border bg-card hover:border-primary/40"
                         }`}
                       >
                         <div className="flex items-start justify-between gap-4">
@@ -177,9 +198,7 @@ export default function MerchantDetail() {
                             <h3 className="text-base font-semibold text-foreground">{pkg.name}</h3>
                             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{pkg.description}</p>
                           </div>
-                          {isActive && (
-                            <Badge className="bg-primary text-white hover:bg-primary">Dipilih</Badge>
-                          )}
+                          {isActive && <Badge className="bg-primary text-white hover:bg-primary">Dipilih</Badge>}
                         </div>
                         <p className="mt-4 text-lg font-bold text-primary">{formatIdr(pkg.price)}</p>
                       </button>
@@ -188,14 +207,10 @@ export default function MerchantDetail() {
                 </div>
               </TabsContent>
             </Tabs>
-
           </div>
 
-          {/* Sidebar (Right) */}
           <div className="lg:col-span-4 space-y-6">
             <div className="sticky top-24 space-y-6">
-              
-              {/* Action Card */}
               <Card className="border-border shadow-lg overflow-hidden">
                 <div className="bg-secondary/30 p-4 border-b border-border">
                   <h3 className="font-semibold text-lg">Pilih Paket Kemitraan</h3>
@@ -220,11 +235,7 @@ export default function MerchantDetail() {
                   <div className="space-y-1">
                     <p className="text-xs text-muted-foreground">Mulai Dari</p>
                     <p className="text-2xl md:text-3xl font-bold text-primary">
-                      {selectedPackage
-                        ? formatIdr(selectedPackage.price)
-                        : merchantPriceRange
-                          ? formatPriceRange(merchantPriceRange.min, merchantPriceRange.max)
-                          : "-"}
+                      {selectedPackage ? formatIdr(selectedPackage.price) : merchantPriceRange ? formatPriceRange(merchantPriceRange.min, merchantPriceRange.max) : "-"}
                     </p>
                     <p className="text-xs text-muted-foreground">BEP {merchant.bepMonths} Bulan</p>
                   </div>
@@ -232,9 +243,7 @@ export default function MerchantDetail() {
                   {selectedPackage && (
                     <div className="rounded-lg border border-border bg-muted/30 p-3">
                       <p className="text-xs font-semibold text-foreground">{selectedPackage.name}</p>
-                      <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-                        {selectedPackage.description}
-                      </p>
+                      <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{selectedPackage.description}</p>
                     </div>
                   )}
 
@@ -248,46 +257,31 @@ export default function MerchantDetail() {
                     </div>
                   </div>
 
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-muted-foreground">Pesan untuk tim kami</label>
+                    <Textarea
+                      placeholder={user ? "Tulis kebutuhan atau pertanyaan Anda..." : "Masuk dulu untuk mengirim pertanyaan"}
+                      value={message}
+                      onChange={(e) => setMessage(e.target.value)}
+                      disabled={!user}
+                    />
+                  </div>
+
                   <div className="grid grid-cols-2 gap-3">
-                    <Button variant="outline" className="w-full text-xs sm:text-sm">Beli Sekarang</Button>
-                    <Button className="w-full bg-primary hover:bg-primary/90 text-white shadow-md text-xs sm:text-sm">
+                    <Button variant="outline" className="w-full text-xs sm:text-sm" onClick={() => handleInquiry("buy")} disabled={inquiryMutation.isPending || isLoading}>
+                      Beli Sekarang
+                    </Button>
+                    <Button className="w-full bg-primary hover:bg-primary/90 text-white shadow-md text-xs sm:text-sm" onClick={() => handleInquiry("contact")} disabled={inquiryMutation.isPending || isLoading}>
                       Hubungi
                     </Button>
                   </div>
-                  
-                  <div className="text-center">
-                    <a href="#" className="text-xs text-muted-foreground underline hover:text-primary">Punya pertanyaan tentang kemitraan ini?</a>
-                  </div>
                 </div>
               </Card>
-
-              {/* Stats Card */}
-              <Card className="bg-primary/5 border-none shadow-none hidden lg:block">
-                <div className="p-4 grid grid-cols-2 gap-4">
-                   <div className="space-y-1">
-                     <p className="text-xs text-muted-foreground">Total Gerai</p>
-                     <p className="font-bold text-foreground">58 Cabang</p>
-                   </div>
-                   <div className="space-y-1">
-                     <p className="text-xs text-muted-foreground">Bergabung</p>
-                     <p className="font-bold text-foreground">2019</p>
-                   </div>
-                   <div className="space-y-1">
-                     <p className="text-xs text-muted-foreground">Min. Kontrak</p>
-                     <p className="font-bold text-foreground">5 Tahun</p>
-                   </div>
-                   <div className="space-y-1">
-                     <p className="text-xs text-muted-foreground">Royalty Fee</p>
-                     <p className="font-bold text-foreground">Gratis</p>
-                   </div>
-                </div>
-              </Card>
-
             </div>
           </div>
         </div>
       </div>
-      
+
       <Footer />
     </div>
   );
