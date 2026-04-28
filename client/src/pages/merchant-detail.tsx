@@ -9,7 +9,7 @@ import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
-import { Star, Share2, CheckCircle2, Info } from "lucide-react";
+import { Star, Share2, CheckCircle2, Info, BadgeCheck } from "lucide-react";
 import heroImage from "@assets/generated_images/professional_business_partnership_banner_showing_growth_and_success.png";
 import NotFound from "@/pages/not-found";
 import { useToast } from "@/hooks/use-toast";
@@ -112,7 +112,12 @@ export default function MerchantDetail() {
                 </div>
                 <div className="flex-1 space-y-2 w-full text-center sm:text-left">
                   <div className="flex items-center justify-between">
-                    <h1 className="text-2xl md:text-3xl font-bold text-foreground w-full sm:w-auto">{merchant.name}</h1>
+                    <h1 className="text-2xl md:text-3xl font-bold text-foreground w-full sm:w-auto inline-flex items-center gap-2">
+                      {merchant.name}
+                      {merchant.isOfficialPartner ? (
+                        <BadgeCheck size={22} className="shrink-0 text-blue-600" aria-label="Official Partner" />
+                      ) : null}
+                    </h1>
                     <div className="flex gap-2 hidden sm:flex">
                       <Button variant="ghost" size="icon" className="rounded-full"><Share2 size={18} /></Button>
                     </div>
@@ -121,6 +126,12 @@ export default function MerchantDetail() {
                     <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 gap-1 pl-1 pr-2">
                       <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" /> Online
                     </Badge>
+                    {merchant.isOfficialPartner ? (
+                      <Badge className="bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-50 gap-1">
+                        <BadgeCheck size={14} className="text-blue-600" />
+                        Official Partner
+                      </Badge>
+                    ) : null}
                     {merchant.rating && (
                       <div className="flex items-center gap-1 text-yellow-500 font-medium">
                         <Star size={14} className="fill-current" /> {merchant.rating}

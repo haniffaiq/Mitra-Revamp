@@ -16,6 +16,7 @@ export interface ClientMerchant {
   logoUrl: string;
   bepMonths: number;
   isTopMerchant?: boolean;
+  isOfficialPartner?: boolean;
   rating?: number;
   type: string;
   packages: ClientMerchantPackage[];

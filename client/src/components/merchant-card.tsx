@@ -2,7 +2,7 @@ import { Link, useRoute } from "wouter";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { Star, TrendingUp, Info } from "lucide-react";
+import { Star, TrendingUp, Info, BadgeCheck } from "lucide-react";
 import { ClientMerchant } from "@/lib/api";
 import { formatPriceRange, getPackagePriceRange } from "@/lib/utils";
 
@@ -24,13 +24,29 @@ export function MerchantCard({ merchant }: { merchant: ClientMerchant }) {
               </div>
             )}
           </div>
-          <Badge variant="secondary" className="text-[10px] font-medium bg-secondary text-secondary-foreground whitespace-nowrap">
-            {merchant.type}
-          </Badge>
+          <div className="flex flex-col items-end gap-1">
+            <Badge variant="secondary" className="text-[10px] font-medium bg-secondary text-secondary-foreground whitespace-nowrap">
+              {merchant.type}
+            </Badge>
+            {merchant.isOfficialPartner ? (
+              <Badge
+                title="Official Partner Mitranesia"
+                className="text-[10px] font-semibold whitespace-nowrap gap-1 bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-50"
+              >
+                <BadgeCheck size={12} className="text-blue-600" />
+                Official Partner
+              </Badge>
+            ) : null}
+          </div>
         </div>
 
         <div className="space-y-1 mb-4">
-          <h3 className="font-bold text-base md:text-lg text-foreground group-hover:text-primary transition-colors line-clamp-1">{merchant.name}</h3>
+          <h3 className="font-bold text-base md:text-lg text-foreground group-hover:text-primary transition-colors line-clamp-1 inline-flex items-center gap-1">
+            {merchant.name}
+            {merchant.isOfficialPartner ? (
+              <BadgeCheck size={16} className="shrink-0 text-blue-600" aria-label="Official Partner" />
+            ) : null}
+          </h3>
           <p className="text-xs text-muted-foreground line-clamp-1">{merchant.category}</p>
         </div>
 
