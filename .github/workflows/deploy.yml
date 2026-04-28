@@ -1,0 +1,49 @@
+name: Deploy client web
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup SSH
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H "$VPS_HOST" >> ~/.ssh/known_hosts
+
+      - name: Trigger deploy on VPS (git pull, podman build, restart)
+        env:
+          VPS_USER: ${{ secrets.VPS_USER }}
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+        run: |
+          ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no "$VPS_USER@$VPS_HOST" \
+            "set -e
+             cd /srv/web
+             git fetch --all --prune
+             git reset --hard origin/main
+             podman build -t mitranesia-web:latest -f Dockerfile.podman .
+             systemctl restart container-mitranesia-web
+             sleep 3
+             systemctl is-active container-mitranesia-web"
+
+      - name: Smoke test
+        run: |
+          for i in 1 2 3 4 5; do
+            code=$(curl -sS -o /dev/null -w '%{http_code}' https://mitranesia.id/ || true)
+            if [ "$code" = "200" ]; then echo "OK code=$code"; exit 0; fi
+            echo "attempt $i code=$code, retrying..."
+            sleep 3
+          done
+          echo "smoke test failed"; exit 1

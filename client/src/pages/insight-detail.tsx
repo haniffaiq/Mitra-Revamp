@@ -8,6 +8,7 @@ import { Card } from "@/components/ui/card";
 import { Calendar, User } from "lucide-react";
 import { ClientInsightArticle, fetchJson } from "@/lib/api";
 import NotFound from "@/pages/not-found";
+import DOMPurify from "dompurify";
 
 export default function InsightDetail() {
   const [, params] = useRoute("/insight/:id");
@@ -65,12 +66,25 @@ export default function InsightDetail() {
             </div>
           </Card>
 
-          <div className="prose prose-lg max-w-none text-foreground">
-            {article.content.map((paragraph, index) => (
-              <p key={index} className="text-muted-foreground leading-relaxed">
-                {paragraph}
-              </p>
-            ))}
+          <div className="prose prose-lg max-w-none text-foreground prose-headings:text-foreground prose-a:text-primary prose-strong:text-foreground">
+            {article.content.map((paragraph, index) => {
+              const trimmed = (paragraph ?? "").trim();
+              const isHtml = /<\/?[a-z][\s\S]*>/i.test(trimmed);
+              if (isHtml) {
+                return (
+                  <div
+                    key={index}
+                    className="text-muted-foreground leading-relaxed"
+                    dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(trimmed) }}
+                  />
+                );
+              }
+              return (
+                <p key={index} className="text-muted-foreground leading-relaxed">
+                  {trimmed}
+                </p>
+              );
+            })}
           </div>
         </div>
       </div>
