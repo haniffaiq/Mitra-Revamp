@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "type": "module",
   "license": "MIT",
+  "packageManager": "pnpm@9.15.0",
   "scripts": {
     "dev:client": "vite dev --port 5001",
     "dev": "NODE_ENV=development tsx server/index.ts",

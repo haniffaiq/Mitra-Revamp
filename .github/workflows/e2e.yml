@@ -1,0 +1,37 @@
+name: E2E smoke (Playwright)
+
+on:
+  workflow_run:
+    workflows: ["Deploy client web"]
+    types: [completed]
+  workflow_dispatch:
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install Playwright
+        run: |
+          npm install --no-save --no-audit --no-fund @playwright/test@^1.50.0
+          npx playwright install --with-deps chromium
+
+      - name: Run smoke
+        run: npx playwright test e2e/smoke.spec.ts --reporter=list
+        env:
+          BASE_URL: https://mitranesia.id
+          API_URL: https://api.mitranesia.id
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 14
