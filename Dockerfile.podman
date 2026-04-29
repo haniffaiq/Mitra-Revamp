@@ -2,7 +2,7 @@ FROM docker.io/library/node:22-slim AS builder
 WORKDIR /app
 RUN corepack enable && corepack prepare pnpm@9 --activate
 COPY package*.json .npmrc* ./
-RUN pnpm install --prod=false --reporter=silent
+RUN pnpm install --shamefully-hoist --prod=false --reporter=silent
 COPY . .
 RUN pnpm exec vite build
 
