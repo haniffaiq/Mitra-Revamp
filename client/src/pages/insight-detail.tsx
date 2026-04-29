@@ -26,8 +26,21 @@ export default function InsightDetail() {
   if (isError) return <NotFound />;
   if (!article) return null;
 
+  const articleSchema = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: article.title,
+    description: article.excerpt,
+    image: article.image,
+    author: { "@type": "Person", name: article.author },
+    publisher: { "@type": "Organization", name: "Mitranesia", url: "https://mitranesia.id/" },
+    datePublished: article.date,
+    mainEntityOfPage: `https://mitranesia.id/insight/${article.slug}`,
+  };
+
   return (
     <div className="min-h-screen bg-background font-sans">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }} />
       <Navbar />
 
       <div className="container mx-auto px-4 py-4 text-sm text-muted-foreground">
@@ -62,7 +75,7 @@ export default function InsightDetail() {
 
           <Card className="overflow-hidden border-border/60">
             <div className="aspect-[16/9] overflow-hidden">
-              <img src={article.image} alt={article.title} className="w-full h-full object-cover" />
+              <img loading="lazy" decoding="async" src={article.image} alt={article.title} className="w-full h-full object-cover" />
             </div>
           </Card>
 

@@ -41,7 +41,7 @@ export default function Register() {
   return (
     <div className="min-h-screen bg-background flex flex-col md:flex-row font-sans">
       <div className="hidden md:flex md:w-1/2 lg:w-2/3 bg-secondary relative overflow-hidden">
-        <img src={bgImage} alt="Register Background" className="absolute inset-0 w-full h-full object-cover opacity-80 mix-blend-multiply" />
+        <img loading="lazy" decoding="async" src={bgImage} alt="Register Background" className="absolute inset-0 w-full h-full object-cover opacity-80 mix-blend-multiply" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
         <div className="relative z-10 p-12 flex flex-col justify-end h-full text-white space-y-4">
           <h1 className="text-4xl lg:text-5xl font-bold leading-tight">

@@ -16,14 +16,16 @@ export default function Merchants() {
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [typeFilter, setTypeFilter] = useState("all");
   const [priceRange, setPriceRange] = useState([0, 500]);
+  const [officialOnly, setOfficialOnly] = useState(false);
   const [page, setPage] = useState(1);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const initialSearch = params.get("search");
+    const initialSearch = params.get("search") ?? params.get("q");
     const initialCategory = params.get("category");
     if (initialSearch) setSearchTerm(initialSearch);
     if (initialCategory) setCategoryFilter(initialCategory);
+    if (params.get("official") === "1") setOfficialOnly(true);
   }, []);
 
   const { data, isLoading } = useQuery({
@@ -43,7 +45,7 @@ export default function Merchants() {
     },
   });
 
-  const merchants = data?.data ?? [];
+  const merchants = (data?.data ?? []).filter((m) => (officialOnly ? m.isOfficialPartner : true));
   const categories = data?.filters.categories ?? [];
   const types = data?.filters.types ?? [];
 
@@ -77,6 +79,7 @@ export default function Merchants() {
                     setTypeFilter("all");
                     setPriceRange([0, 500]);
                     setSearchTerm("");
+                    setOfficialOnly(false);
                     setPage(1);
                   }}
                 >
@@ -114,6 +117,16 @@ export default function Merchants() {
                     </SelectContent>
                   </Select>
                 </div>
+
+                <label className="flex items-center gap-2 cursor-pointer text-sm font-medium">
+                  <input
+                    type="checkbox"
+                    checked={officialOnly}
+                    onChange={(e) => { setOfficialOnly(e.target.checked); setPage(1); }}
+                    className="rounded border-input"
+                  />
+                  Official Partner only
+                </label>
 
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">

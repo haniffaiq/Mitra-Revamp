@@ -1,14 +1,23 @@
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
-import { Menu } from "lucide-react";
+import { Menu, Search } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useState } from "react";
 import { useAuth } from "@/lib/auth";
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const [, setLocation] = useLocation();
   const { user, logout } = useAuth();
+
+  function submitSearch(e: React.FormEvent) {
+    e.preventDefault();
+    const q = searchQuery.trim();
+    if (!q) return;
+    setLocation(`/merchants?q=${encodeURIComponent(q)}`);
+    setIsOpen(false);
+  }
 
   return (
     <nav className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-md">
@@ -27,6 +36,17 @@ export function Navbar() {
             <span className="bg-accent/10 text-accent text-[10px] px-1.5 py-0.5 rounded-full">Baru</span>
           </a></Link>
         </div>
+
+        <form onSubmit={submitSearch} className="hidden lg:flex items-center relative ml-4">
+          <Search size={14} className="absolute left-3 text-muted-foreground" />
+          <input
+            type="search"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Cari merchant…"
+            className="w-56 pl-8 pr-3 py-1.5 text-sm rounded-full border border-input bg-background focus:outline-none focus:ring-1 focus:ring-primary"
+          />
+        </form>
 
         <div className="flex items-center gap-3">
           {user ? (
@@ -72,6 +92,16 @@ export function Navbar() {
                     <span className="text-xl font-bold text-primary">Mitranesia</span>
                   </a>
                 </Link>
+                <form onSubmit={submitSearch} className="relative">
+                  <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                  <input
+                    type="search"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Cari merchant…"
+                    className="w-full pl-8 pr-3 py-2 text-sm rounded-md border border-input bg-background focus:outline-none focus:ring-1 focus:ring-primary"
+                  />
+                </form>
                 <div className="flex flex-col gap-4 text-base font-medium text-muted-foreground">
                   <Link href="/insight"><a onClick={() => setIsOpen(false)} className="hover:text-primary transition-colors">Insight</a></Link>
                   <Link href="/merchants"><a onClick={() => setIsOpen(false)} className="hover:text-primary transition-colors">Merchant Kami</a></Link>

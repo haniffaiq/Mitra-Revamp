@@ -92,8 +92,31 @@ export default function MerchantDetail() {
   if (isError) return <NotFound />;
   if (!merchant) return null;
 
+  const productSchema = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: merchant.name,
+    image: merchant.logoUrl,
+    category: merchant.category,
+    brand: { "@type": "Brand", name: merchant.name },
+    aggregateRating: merchant.rating
+      ? { "@type": "AggregateRating", ratingValue: merchant.rating, ratingCount: 1, bestRating: 5 }
+      : undefined,
+    offers: {
+      "@type": "AggregateOffer",
+      priceCurrency: "IDR",
+      lowPrice: merchant.minPrice,
+      highPrice: merchant.maxPrice,
+      offerCount: merchant.packages.length,
+      availability: "https://schema.org/InStock",
+    },
+    description: `Peluang waralaba ${merchant.name} (${merchant.type}) di Mitranesia. BEP estimasi ${merchant.bepMonths} bulan.`,
+    url: `https://mitranesia.id/merchant/${merchant.id}`,
+  };
+
   return (
     <div className="min-h-screen bg-background font-sans">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }} />
       <Navbar />
 
       <div className="container mx-auto px-4 py-4 text-sm text-muted-foreground">

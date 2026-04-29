@@ -144,7 +144,7 @@ export default function Home() {
                 return (
                   <CarouselItem key={slide.id}>
                     <div className="relative aspect-[4/3] sm:aspect-[21/9] md:aspect-[3/1] group">
-                      <img src={slide.image} alt={slide.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                      <img loading="lazy" decoding="async" src={slide.image} alt={slide.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
                       <div className={`absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r ${slide.color} to-transparent flex items-end md:items-center p-6 md:px-16`}>
                         <div className="max-w-lg space-y-3 md:space-y-4 w-full">
                           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/20 backdrop-blur-sm border border-white/20 text-white text-[10px] md:text-xs font-medium">

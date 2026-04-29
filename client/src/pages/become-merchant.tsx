@@ -100,7 +100,7 @@ export default function BecomeMerchant() {
             </div>
             <div className="lg:w-1/2 relative">
               <div className="relative rounded-2xl overflow-hidden shadow-2xl border-4 border-white/10">
-                <img src={heroImage} alt="Happy Business Owner" className="w-full h-auto object-cover" />
+                <img loading="lazy" decoding="async" src={heroImage} alt="Happy Business Owner" className="w-full h-auto object-cover" />
               </div>
               <div className="absolute -bottom-6 -left-6 bg-white text-foreground p-4 rounded-xl shadow-xl border border-border hidden md:block">
                 <div className="flex items-center gap-3">

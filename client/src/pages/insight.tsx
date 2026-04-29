@@ -53,7 +53,7 @@ export default function Insight() {
               <Card className="overflow-hidden border-border/60 hover:shadow-xl transition-all duration-300">
                 <div className="grid md:grid-cols-2 gap-0">
                   <div className="aspect-video md:aspect-auto overflow-hidden relative">
-                    <img src={featuredArticle.image} alt={featuredArticle.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                    <img loading="lazy" decoding="async" src={featuredArticle.image} alt={featuredArticle.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
                     <div className="absolute top-4 left-4">
                       <Badge className="bg-primary text-white hover:bg-primary">{featuredArticle.category}</Badge>
                     </div>
@@ -106,7 +106,7 @@ export default function Insight() {
                 <a className="group h-full">
                   <Card className="h-full overflow-hidden border-border/60 hover:shadow-lg transition-all duration-300 flex flex-col">
                     <div className="aspect-[16/10] overflow-hidden relative">
-                      <img src={article.image} alt={article.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                      <img loading="lazy" decoding="async" src={article.image} alt={article.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
                       <div className="absolute top-3 left-3">
                         <Badge variant="secondary" className="backdrop-blur-md bg-white/90">{article.category}</Badge>
                       </div>
