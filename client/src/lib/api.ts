@@ -19,6 +19,7 @@ export interface ClientMerchant {
   isOfficialPartner?: boolean;
   rating?: number;
   type: string;
+  images?: Array<{ id: string; label?: string | null; url: string }>;
   packages: ClientMerchantPackage[];
   minPrice: number;
   maxPrice: number;

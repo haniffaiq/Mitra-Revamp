@@ -149,18 +149,50 @@ export default function MerchantDetail() {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
-              <div className="col-span-2 md:col-span-1 aspect-video rounded-xl overflow-hidden bg-muted relative group cursor-pointer shadow-sm">
-                <img src={heroImage} alt="Gallery 1" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
-                <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors" />
-              </div>
-              <div className="aspect-video rounded-xl overflow-hidden bg-muted relative group cursor-pointer shadow-sm">
-                <div className="w-full h-full bg-secondary/50 flex items-center justify-center text-primary font-medium text-sm md:text-base">Menu 1</div>
-              </div>
-              <div className="aspect-video rounded-xl overflow-hidden bg-muted relative group cursor-pointer shadow-sm">
-                <div className="w-full h-full bg-secondary/50 flex items-center justify-center text-primary font-medium text-sm md:text-base">Outlet</div>
-              </div>
-            </div>
+            {(() => {
+              const galleryImages = (merchant.images ?? []).slice(0, 3);
+              const slots = [0, 1, 2];
+              return (
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
+                  {slots.map((slotIdx) => {
+                    const img = galleryImages[slotIdx];
+                    const isFirst = slotIdx === 0;
+                    const containerClass = `${isFirst ? "col-span-2 md:col-span-1 " : ""}aspect-video rounded-xl overflow-hidden bg-muted relative group cursor-pointer shadow-sm`;
+                    if (img) {
+                      return (
+                        <div key={img.id} className={containerClass}>
+                          <img
+                            src={img.url}
+                            alt={img.label ?? `Gallery ${slotIdx + 1}`}
+                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                          />
+                          {img.label ? (
+                            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-2 text-white text-xs font-medium">
+                              {img.label}
+                            </div>
+                          ) : null}
+                        </div>
+                      );
+                    }
+                    if (isFirst) {
+                      return (
+                        <div key={`slot-${slotIdx}`} className={containerClass}>
+                          <img src={heroImage} alt="Gallery placeholder" className="w-full h-full object-cover" />
+                          <div className="absolute inset-0 bg-black/20" />
+                        </div>
+                      );
+                    }
+                    return (
+                      <div key={`slot-${slotIdx}`} className={containerClass}>
+                        <div className="w-full h-full bg-secondary/50 flex items-center justify-center text-primary font-medium text-sm md:text-base">
+                          {slotIdx === 1 ? "Menu" : "Outlet"}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              );
+            })()}
 
             <Tabs defaultValue="about" className="w-full">
               <div className="overflow-x-auto pb-2 -mx-4 px-4 sm:mx-0 sm:px-0 hide-scrollbar">
