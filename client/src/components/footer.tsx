@@ -1,6 +1,27 @@
-import { Facebook, Instagram, Linkedin, Twitter, Mail, MapPin, Phone } from "lucide-react";
+import { useState } from "react";
+import { Facebook, Instagram, Linkedin, Mail, MapPin, Phone, CheckCircle2 } from "lucide-react";
+import { postJson } from "@/lib/api";
 
 export function Footer() {
+  const [email, setEmail] = useState("");
+  const [status, setStatus] = useState<"idle" | "loading" | "ok" | "error">("idle");
+  const [message, setMessage] = useState("");
+
+  async function handleSubscribe(e: React.FormEvent) {
+    e.preventDefault();
+    if (!email.trim()) return;
+    setStatus("loading");
+    try {
+      await postJson("/api/client/newsletter/subscribe", { email: email.trim(), source: "footer" });
+      setStatus("ok");
+      setMessage("Terima kasih sudah berlangganan!");
+      setEmail("");
+    } catch (err) {
+      setStatus("error");
+      setMessage(err instanceof Error ? err.message : "Gagal subscribe. Coba lagi.");
+    }
+  }
+
   return (
     <footer className="bg-secondary/30 pt-16 pb-8 border-t border-border/50">
       <div className="container mx-auto px-4 md:px-6">
@@ -58,24 +79,41 @@ export function Footer() {
                 <span>0812-3456-7890</span>
               </li>
             </ul>
-            
+
             <div className="mt-6">
-              <div className="flex gap-2">
-                <input 
-                  type="email" 
-                  placeholder="Email address" 
-                  className="flex-1 px-3 py-2 text-sm rounded-md border border-input bg-background focus:outline-none focus:ring-1 focus:ring-primary"
+              <p className="text-xs font-medium text-foreground mb-2">Newsletter</p>
+              <form onSubmit={handleSubscribe} className="flex gap-2">
+                <input
+                  type="email"
+                  required
+                  placeholder="Email address"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  disabled={status === "loading"}
+                  className="flex-1 px-3 py-2 text-sm rounded-md border border-input bg-background focus:outline-none focus:ring-1 focus:ring-primary disabled:opacity-60"
                 />
-                <button className="px-4 py-2 text-xs font-semibold text-white bg-primary rounded-md hover:bg-primary/90 transition-colors">
-                  Subscribe
+                <button
+                  type="submit"
+                  disabled={status === "loading"}
+                  className="px-4 py-2 text-xs font-semibold text-white bg-primary rounded-md hover:bg-primary/90 transition-colors disabled:opacity-60"
+                >
+                  {status === "loading" ? "..." : "Subscribe"}
                 </button>
-              </div>
+              </form>
+              {status === "ok" ? (
+                <p className="mt-2 text-xs text-green-600 inline-flex items-center gap-1">
+                  <CheckCircle2 size={12} /> {message}
+                </p>
+              ) : null}
+              {status === "error" ? (
+                <p className="mt-2 text-xs text-destructive">{message}</p>
+              ) : null}
             </div>
           </div>
         </div>
-        
+
         <div className="pt-8 border-t border-border/50 text-center text-xs text-muted-foreground">
-          <p>© 2025 Mitranesia. All rights reserved.</p>
+          <p>© 2026 Mitranesia. All rights reserved.</p>
         </div>
       </div>
     </footer>

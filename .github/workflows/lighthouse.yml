@@ -1,0 +1,53 @@
+name: Lighthouse audit
+
+on:
+  workflow_run:
+    workflows: ["Deploy client web"]
+    types: [completed]
+  workflow_dispatch:
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install lhci
+        run: npm install -g @lhci/cli@0.14.x
+
+      - name: Wait for site
+        run: |
+          for i in 1 2 3 4 5 6; do
+            if curl -sS -f -m 10 https://mitranesia.id/ > /dev/null; then echo OK; exit 0; fi
+            sleep 5
+          done
+          echo "site not reachable"; exit 1
+
+      - name: Run Lighthouse
+        run: |
+          mkdir -p .lighthouseci
+          lhci autorun \
+            --collect.url=https://mitranesia.id/ \
+            --collect.url=https://mitranesia.id/merchants \
+            --collect.url=https://mitranesia.id/insight \
+            --collect.numberOfRuns=2 \
+            --upload.target=temporary-public-storage \
+            --assert.preset=lighthouse:no-pwa \
+            --assert.assertions.categories:performance.minScore=0.6 \
+            --assert.assertions.categories:accessibility.minScore=0.85 \
+            --assert.assertions.categories:best-practices.minScore=0.85 \
+            --assert.assertions.categories:seo.minScore=0.9 || true
+
+      - name: Upload report artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lighthouse-report
+          path: .lighthouseci/
+          retention-days: 14
