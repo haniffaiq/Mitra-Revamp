@@ -14,8 +14,8 @@ export function MerchantCard({ merchant }: { merchant: ClientMerchant }) {
       <CardContent className="p-5 md:p-6 flex-1">
         <div className="flex items-start justify-between mb-6">
           <div className="relative">
-            <div className="w-14 h-14 md:w-16 md:h-16 rounded-full border-2 border-border p-1 bg-white overflow-hidden group-hover:scale-105 transition-transform duration-300 shrink-0">
-              <img loading="lazy" decoding="async" src={merchant.logoUrl} alt={merchant.name} className="w-full h-full object-contain" />
+            <div className="w-14 h-14 md:w-16 md:h-16 rounded-full border-2 border-border p-1 bg-white overflow-hidden group-hover:scale-105 transition-transform duration-300 shrink-0 [transform:translateZ(0)]">
+              <img loading="lazy" decoding="async" src={merchant.logoUrl} alt={merchant.name} className="w-full h-full object-contain rounded-full" />
             </div>
             {merchant.rating && (
               <div className="absolute -bottom-1 -right-1 bg-white shadow-sm border px-1.5 py-0.5 rounded-full flex items-center gap-0.5 text-[10px] font-bold text-foreground">

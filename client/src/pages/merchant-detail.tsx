@@ -130,8 +130,8 @@ export default function MerchantDetail() {
           <div className="lg:col-span-8 space-y-6 md:space-y-8">
             <div className="bg-card rounded-2xl p-5 md:p-8 border border-border shadow-sm">
               <div className="flex flex-col sm:flex-row gap-5 md:gap-6 items-start sm:items-center">
-                <div className="w-20 h-20 md:w-32 md:h-32 rounded-full border-4 border-secondary p-1 bg-white shrink-0 mx-auto sm:mx-0">
-                  <img src={merchant.logoUrl} alt={`Logo ${merchant.name}`} className="w-full h-full object-contain" />
+                <div className="w-20 h-20 md:w-32 md:h-32 rounded-full border-4 border-secondary p-1 bg-white shrink-0 mx-auto sm:mx-0 overflow-hidden">
+                  <img src={merchant.logoUrl} alt={`Logo ${merchant.name}`} className="w-full h-full object-contain rounded-full" />
                 </div>
                 <div className="flex-1 space-y-2 w-full text-center sm:text-left">
                   <div className="flex items-center justify-between">
