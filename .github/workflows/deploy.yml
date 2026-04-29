@@ -21,7 +21,7 @@ jobs:
           mkdir -p ~/.ssh
           printf '%s\n' "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
-          ssh-keyscan -H "$VPS_HOST" >> ~/.ssh/known_hosts
+          ssh-keyscan -H -T 5 "$VPS_HOST" >> ~/.ssh/known_hosts 2>/dev/null || true
 
       - name: Trigger deploy on VPS (git pull, podman build, restart)
         env:
