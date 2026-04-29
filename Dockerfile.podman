@@ -1,14 +1,11 @@
 FROM docker.io/library/node:22-slim AS builder
 WORKDIR /app
 COPY package*.json ./
-RUN rm -rf node_modules package-lock.json && \
-    npm install --no-audit --no-fund --legacy-peer-deps --include=optional --include=peer && \
+RUN npm ci --no-audit --no-fund --legacy-peer-deps --include=optional && \
     npm install --no-save --no-audit --no-fund --legacy-peer-deps \
       @rollup/rollup-linux-x64-gnu \
       lightningcss-linux-x64-gnu \
-      @tailwindcss/oxide-linux-x64-gnu \
-      @radix-ui/react-checkbox \
-      @radix-ui/react-slot
+      @tailwindcss/oxide-linux-x64-gnu
 COPY . .
 RUN npx vite build
 
