@@ -1,10 +1,14 @@
 FROM docker.io/library/node:22-slim AS builder
 WORKDIR /app
-RUN corepack enable && corepack prepare pnpm@9 --activate
-COPY package*.json .npmrc* ./
-RUN pnpm install --shamefully-hoist --prod=false --reporter=silent
+COPY package*.json ./
+RUN rm -f package-lock.json && \
+    npm install --no-audit --no-fund --legacy-peer-deps --include=optional && \
+    npm install --no-save --no-audit --no-fund --legacy-peer-deps \
+      @rollup/rollup-linux-x64-gnu \
+      lightningcss-linux-x64-gnu \
+      @tailwindcss/oxide-linux-x64-gnu
 COPY . .
-RUN pnpm exec vite build
+RUN npx vite build
 
 FROM docker.io/library/nginx:alpine
 COPY --from=builder /app/dist/public /usr/share/nginx/html
