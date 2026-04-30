@@ -3,7 +3,7 @@ import { Link, useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
-import { MerchantCard } from "@/components/merchant-card";
+import { MerchantCard, MerchantCardSkeleton } from "@/components/merchant-card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -200,7 +200,9 @@ export default function Home() {
             </Link>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-            {!isLoading && topMerchants.slice(0, 8).map((merchant) => <MerchantCard key={merchant.id} merchant={merchant} />)}
+            {isLoading
+              ? Array.from({ length: 8 }).map((_, i) => <MerchantCardSkeleton key={`top-skel-${i}`} />)
+              : topMerchants.slice(0, 8).map((merchant) => <MerchantCard key={merchant.id} merchant={merchant} />)}
           </div>
         </div>
       </section>
@@ -209,7 +211,9 @@ export default function Home() {
         <div className="container mx-auto px-4 md:px-6">
           <h2 className="text-xl md:text-2xl font-bold text-foreground mb-6 md:mb-8">Rekomendasi Kami</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-            {!isLoading && recommendedMerchants.slice(0, 4).map((merchant) => <MerchantCard key={`rec-${merchant.id}`} merchant={merchant} />)}
+            {isLoading
+              ? Array.from({ length: 4 }).map((_, i) => <MerchantCardSkeleton key={`rec-skel-${i}`} />)
+              : recommendedMerchants.slice(0, 4).map((merchant) => <MerchantCard key={`rec-${merchant.id}`} merchant={merchant} />)}
           </div>
         </div>
       </section>
@@ -232,7 +236,9 @@ export default function Home() {
           </Tabs>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-            {!isLoading && otherMerchants.slice(0, 8).map((merchant) => <MerchantCard key={`find-${merchant.id}`} merchant={merchant} />)}
+            {isLoading
+              ? Array.from({ length: 8 }).map((_, i) => <MerchantCardSkeleton key={`find-skel-${i}`} />)
+              : otherMerchants.slice(0, 8).map((merchant) => <MerchantCard key={`find-${merchant.id}`} merchant={merchant} />)}
           </div>
 
           <div className="mt-8 md:mt-12 text-center">

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
-import { MerchantCard } from "@/components/merchant-card";
+import { MerchantCard, MerchantCardSkeleton } from "@/components/merchant-card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -183,12 +183,14 @@ export default function Merchants() {
             )}
 
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-              {merchants.length > 0 ? (
+              {isLoading ? (
+                Array.from({ length: 6 }).map((_, i) => <MerchantCardSkeleton key={`merchants-skel-${i}`} />)
+              ) : merchants.length > 0 ? (
                 merchants.map((merchant) => <MerchantCard key={merchant.id} merchant={merchant} />)
               ) : (
                 <div className="col-span-full py-12 text-center text-muted-foreground bg-secondary/20 rounded-xl border border-dashed border-border">
-                  <p className="text-lg font-medium">{isLoading ? "Memuat merchant..." : "Tidak ada merchant ditemukan"}</p>
-                  <p className="text-sm">{isLoading ? "Mohon tunggu sebentar" : "Coba sesuaikan filter pencarian Anda"}</p>
+                  <p className="text-lg font-medium">Tidak ada merchant ditemukan</p>
+                  <p className="text-sm">Coba sesuaikan filter pencarian Anda</p>
                 </div>
               )}
             </div>

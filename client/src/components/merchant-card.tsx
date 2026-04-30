@@ -2,6 +2,7 @@ import { Link, useRoute } from "wouter";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Star, TrendingUp, Info, BadgeCheck } from "lucide-react";
 import { ClientMerchant } from "@/lib/api";
 import { formatPriceRange, getPackagePriceRange } from "@/lib/utils";
@@ -73,6 +74,42 @@ export function MerchantCard({ merchant }: { merchant: ClientMerchant }) {
             Lihat Detail Informasi
           </Button>
         </Link>
+      </CardFooter>
+    </Card>
+  );
+}
+
+export function MerchantCardSkeleton() {
+  return (
+    <Card className="overflow-hidden border-border/60 bg-card/50 flex flex-col h-full">
+      <CardContent className="p-5 md:p-6 flex-1">
+        <div className="flex items-start justify-between mb-6">
+          <Skeleton className="w-14 h-14 md:w-16 md:h-16 rounded-full shrink-0" />
+          <div className="flex flex-col items-end gap-1">
+            <Skeleton className="h-4 w-20 rounded-full" />
+            <Skeleton className="h-4 w-24 rounded-full" />
+          </div>
+        </div>
+
+        <div className="space-y-2 mb-4">
+          <Skeleton className="h-5 w-3/4" />
+          <Skeleton className="h-3 w-1/2" />
+        </div>
+
+        <div className="space-y-3 bg-secondary/20 p-3 rounded-lg border border-border/30">
+          <div className="flex items-center justify-between">
+            <Skeleton className="h-3 w-24" />
+            <Skeleton className="h-3 w-16" />
+          </div>
+          <div className="flex items-center justify-between">
+            <Skeleton className="h-3 w-20" />
+            <Skeleton className="h-3 w-28" />
+          </div>
+        </div>
+      </CardContent>
+
+      <CardFooter className="p-4 pt-0 mt-auto">
+        <Skeleton className="h-9 w-full" />
       </CardFooter>
     </Card>
   );
