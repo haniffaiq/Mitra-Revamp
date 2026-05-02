@@ -9,6 +9,7 @@ import { Calendar, User } from "lucide-react";
 import { ClientInsightArticle, fetchJson } from "@/lib/api";
 import NotFound from "@/pages/not-found";
 import DOMPurify from "dompurify";
+import { JsonLd, buildBreadcrumb } from "@/components/json-ld";
 
 export default function InsightDetail() {
   const [, params] = useRoute("/insight/:id");
@@ -40,7 +41,12 @@ export default function InsightDetail() {
 
   return (
     <div className="min-h-screen bg-background font-sans">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }} />
+      <JsonLd data={articleSchema} />
+      <JsonLd data={buildBreadcrumb([
+        { name: "Beranda", url: "https://mitranesia.id/" },
+        { name: "Insight", url: "https://mitranesia.id/insight" },
+        { name: article.title, url: `https://mitranesia.id/insight/${article.slug}` },
+      ])} />
       <Navbar />
 
       <div className="container mx-auto px-4 py-4 text-sm text-muted-foreground">

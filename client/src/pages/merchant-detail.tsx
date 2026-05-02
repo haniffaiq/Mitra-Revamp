@@ -16,6 +16,8 @@ import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/lib/auth";
 import { ClientMerchant, DetailResponse, fetchJson, postJson } from "@/lib/api";
 import { formatIdr, formatPriceRange, getPackagePriceRange } from "@/lib/utils";
+import { JsonLd, buildBreadcrumb } from "@/components/json-ld";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 export default function MerchantDetail() {
   const [, params] = useRoute("/merchant/:id");
@@ -114,9 +116,52 @@ export default function MerchantDetail() {
     url: `https://mitranesia.id/merchant/${merchant.id}`,
   };
 
+  const faqs = [
+    {
+      q: `Berapa modal awal franchise ${merchant.name}?`,
+      a: `Modal mulai dari ${formatIdr(merchant.minPrice)} sampai ${formatIdr(merchant.maxPrice)} tergantung paket yang dipilih (${merchant.packages.length} paket tersedia).`,
+    },
+    {
+      q: `Berapa lama BEP (Break Even Point) franchise ${merchant.name}?`,
+      a: `Estimasi BEP ${merchant.bepMonths} bulan berdasar rata-rata performa mitra existing.`,
+    },
+    {
+      q: `Apa tipe kemitraan ${merchant.name}?`,
+      a: `${merchant.name} masuk kategori "${merchant.type}" di kategori ${merchant.category}.`,
+    },
+    {
+      q: `Bagaimana cara mendaftar mitra ${merchant.name}?`,
+      a: `Klik tombol "Saya Tertarik" di halaman ini, isi form pendaftaran, tim Mitranesia akan menghubungi maks. 1x24 jam dengan informasi lengkap dan jadwal meeting.`,
+    },
+    ...(merchant.isOfficialPartner
+      ? [{
+          q: `Apakah ${merchant.name} Official Partner Mitranesia?`,
+          a: `Ya, ${merchant.name} adalah Official Partner Mitranesia — telah melalui proses verifikasi legalitas, finansial, dan operasional.`,
+        }]
+      : []),
+  ];
+
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map((f) => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a },
+    })),
+  };
+
+  const breadcrumbSchema = buildBreadcrumb([
+    { name: "Beranda", url: "https://mitranesia.id/" },
+    { name: "Merchant", url: "https://mitranesia.id/merchants" },
+    { name: merchant.name, url: `https://mitranesia.id/merchant/${merchant.id}` },
+  ]);
+
   return (
     <div className="min-h-screen bg-background font-sans">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }} />
+      <JsonLd data={productSchema} />
+      <JsonLd data={faqSchema} />
+      <JsonLd data={breadcrumbSchema} />
       <Navbar />
 
       <div className="container mx-auto px-4 py-4 text-sm text-muted-foreground">
@@ -345,6 +390,18 @@ export default function MerchantDetail() {
               </Card>
             </div>
           </div>
+
+          <section className="mt-12 md:mt-16 max-w-3xl">
+            <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-6">Pertanyaan Yang Sering Ditanya</h2>
+            <Accordion type="single" collapsible className="bg-card border border-border rounded-xl">
+              {faqs.map((f, idx) => (
+                <AccordionItem key={idx} value={`faq-${idx}`} className="px-4 md:px-6">
+                  <AccordionTrigger className="text-left font-semibold text-sm md:text-base">{f.q}</AccordionTrigger>
+                  <AccordionContent className="text-sm text-muted-foreground leading-relaxed">{f.a}</AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </section>
         </div>
       </div>
 

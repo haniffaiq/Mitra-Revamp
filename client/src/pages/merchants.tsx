@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { MerchantCard, MerchantCardSkeleton } from "@/components/merchant-card";
+import { JsonLd, buildBreadcrumb } from "@/components/json-ld";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -51,6 +52,10 @@ export default function Merchants() {
 
   return (
     <div className="min-h-screen bg-background font-sans">
+      <JsonLd data={buildBreadcrumb([
+        { name: "Beranda", url: "https://mitranesia.id/" },
+        { name: "Merchant", url: "https://mitranesia.id/merchants" },
+      ])} />
       <Navbar />
 
       <section className="bg-secondary/30 py-12">

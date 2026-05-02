@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Calendar, User, ArrowRight, TrendingUp, DollarSign, Target, Megaphone } from "lucide-react";
 import { ClientInsightArticle, fetchJson } from "@/lib/api";
+import { JsonLd, buildBreadcrumb } from "@/components/json-ld";
 
 export default function Insight() {
   const { data: insights = [] } = useQuery({
@@ -31,6 +32,10 @@ export default function Insight() {
 
   return (
     <div className="min-h-screen bg-background font-sans">
+      <JsonLd data={buildBreadcrumb([
+        { name: "Beranda", url: "https://mitranesia.id/" },
+        { name: "Insight", url: "https://mitranesia.id/insight" },
+      ])} />
       <Navbar />
 
       <section className="bg-secondary/30 py-12 md:py-20">
