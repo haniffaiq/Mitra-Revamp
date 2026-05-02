@@ -143,3 +143,18 @@ export async function postJson<T>(path: string, body: unknown, token?: string, m
     body: JSON.stringify(body),
   });
 }
+
+export async function fetchMerchantReviews(identifier: string): Promise<ClientMerchantReview[]> {
+  return fetchJson<ClientMerchantReview[]>(`/api/client/merchants/${encodeURIComponent(identifier)}/reviews`);
+}
+
+export interface SubmitReviewPayload {
+  reviewerName: string;
+  reviewerEmail?: string | null;
+  rating: number;
+  comment?: string | null;
+}
+
+export async function submitMerchantReview(identifier: string, payload: SubmitReviewPayload): Promise<ClientMerchantReview> {
+  return postJson<ClientMerchantReview>(`/api/client/merchants/${encodeURIComponent(identifier)}/reviews`, payload);
+}

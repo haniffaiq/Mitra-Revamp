@@ -14,10 +14,12 @@ import heroImage from "@assets/generated_images/professional_business_partnershi
 import NotFound from "@/pages/not-found";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/lib/auth";
-import { ClientMerchant, DetailResponse, fetchJson, postJson } from "@/lib/api";
+import { ClientMerchant, ClientMerchantReview, DetailResponse, fetchJson, fetchMerchantReviews, postJson, submitMerchantReview } from "@/lib/api";
 import { formatIdr, formatPriceRange, getPackagePriceRange } from "@/lib/utils";
 import { JsonLd, buildBreadcrumb } from "@/components/json-ld";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Input } from "@/components/ui/input";
+import { ShieldCheck } from "lucide-react";
 
 export default function MerchantDetail() {
   const [, params] = useRoute("/merchant/:id");
@@ -27,11 +29,40 @@ export default function MerchantDetail() {
   const { toast } = useToast();
   const [selectedPackageId, setSelectedPackageId] = useState("");
   const [message, setMessage] = useState("");
+  const [reviewOpen, setReviewOpen] = useState(false);
+  const [reviewName, setReviewName] = useState("");
+  const [reviewEmail, setReviewEmail] = useState("");
+  const [reviewRating, setReviewRating] = useState(5);
+  const [reviewComment, setReviewComment] = useState("");
 
   const { data: merchant, isLoading, isError } = useQuery({
     queryKey: ["client-merchant-detail", id],
     queryFn: () => fetchJson<ClientMerchant>(`/api/client/merchants/${id}`),
     enabled: Boolean(id),
+  });
+
+  const reviewsQuery = useQuery({
+    queryKey: ["client-merchant-reviews", id],
+    queryFn: () => fetchMerchantReviews(id!),
+    enabled: Boolean(id),
+  });
+
+  const reviewMutation = useMutation({
+    mutationFn: () => submitMerchantReview(id!, {
+      reviewerName: reviewName.trim(),
+      reviewerEmail: reviewEmail.trim() || null,
+      rating: reviewRating,
+      comment: reviewComment.trim() || null,
+    }),
+    onSuccess: () => {
+      toast({ title: "Ulasan dikirim", description: "Akan tampil setelah disetujui admin." });
+      setReviewOpen(false);
+      setReviewName("");
+      setReviewEmail("");
+      setReviewRating(5);
+      setReviewComment("");
+    },
+    onError: (e) => toast({ title: "Gagal kirim", description: String(e), variant: "destructive" }),
   });
 
   const selectedPackage = useMemo(() => {
@@ -403,6 +434,114 @@ export default function MerchantDetail() {
                 </AccordionItem>
               ))}
             </Accordion>
+          </section>
+
+          <section className="mt-12 md:mt-16 max-w-3xl">
+            <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
+              <div>
+                <h2 className="text-2xl md:text-3xl font-bold text-foreground">Ulasan Mitra</h2>
+                {(merchant.reviewCount ?? 0) > 0 ? (
+                  <p className="text-sm text-muted-foreground mt-1">
+                    <Star size={14} className="inline fill-yellow-400 text-yellow-400 mr-1" />
+                    {merchant.reviewAverage?.toFixed(1) ?? "-"} dari {merchant.reviewCount} ulasan
+                  </p>
+                ) : (
+                  <p className="text-sm text-muted-foreground mt-1">Belum ada ulasan. Jadilah yang pertama!</p>
+                )}
+              </div>
+              <Button variant="outline" onClick={() => setReviewOpen((v) => !v)}>
+                {reviewOpen ? "Tutup Form" : "Tulis Ulasan"}
+              </Button>
+            </div>
+
+            {reviewOpen && (
+              <Card className="p-4 md:p-6 mb-6 space-y-4 bg-card border border-border">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-xs font-medium text-muted-foreground">Nama *</label>
+                    <Input value={reviewName} onChange={(e) => setReviewName(e.target.value)} placeholder="Nama Anda" />
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-muted-foreground">Email (opsional)</label>
+                    <Input type="email" value={reviewEmail} onChange={(e) => setReviewEmail(e.target.value)} placeholder="email@contoh.com" />
+                  </div>
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-muted-foreground block mb-1">Rating *</label>
+                  <div className="flex gap-1">
+                    {[1, 2, 3, 4, 5].map((n) => (
+                      <button
+                        key={n}
+                        type="button"
+                        onClick={() => setReviewRating(n)}
+                        className="p-1 hover:scale-110 transition-transform"
+                        aria-label={`Beri rating ${n} bintang`}
+                      >
+                        <Star
+                          size={28}
+                          className={n <= reviewRating ? "fill-yellow-400 text-yellow-400" : "text-muted-foreground"}
+                        />
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-muted-foreground">Komentar (opsional)</label>
+                  <Textarea
+                    value={reviewComment}
+                    onChange={(e) => setReviewComment(e.target.value)}
+                    placeholder="Ceritakan pengalaman Anda dengan merchant ini..."
+                    rows={4}
+                  />
+                </div>
+                <div className="flex justify-end gap-2">
+                  <Button variant="ghost" onClick={() => setReviewOpen(false)} disabled={reviewMutation.isPending}>
+                    Batal
+                  </Button>
+                  <Button
+                    onClick={() => reviewMutation.mutate()}
+                    disabled={reviewMutation.isPending || reviewName.trim().length < 2}
+                  >
+                    {reviewMutation.isPending ? "Mengirim..." : "Kirim Ulasan"}
+                  </Button>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Ulasan akan ditampilkan setelah disetujui admin (max 24 jam).
+                </p>
+              </Card>
+            )}
+
+            <div className="space-y-3">
+              {reviewsQuery.isLoading ? (
+                <p className="text-sm text-muted-foreground py-4">Memuat ulasan...</p>
+              ) : (reviewsQuery.data ?? []).length === 0 ? (
+                <p className="text-sm text-muted-foreground py-4">Belum ada ulasan disetujui.</p>
+              ) : (
+                (reviewsQuery.data ?? []).map((rev: ClientMerchantReview) => (
+                  <Card key={rev.id} className="p-4 md:p-5 bg-card border border-border">
+                    <div className="flex items-start justify-between gap-3 mb-2 flex-wrap">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="font-semibold text-sm">{rev.reviewerName}</span>
+                        {rev.isVerifiedMitra && (
+                          <Badge variant="outline" className="gap-1 text-[10px] bg-blue-50 text-blue-700 border-blue-200">
+                            <ShieldCheck size={10} /> Verified Mitra
+                          </Badge>
+                        )}
+                      </div>
+                      <span className="text-xs text-muted-foreground">
+                        {new Date(rev.createdAt).toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric" })}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-0.5 text-amber-500 mb-2">
+                      {[1, 2, 3, 4, 5].map((i) => (
+                        <Star key={i} size={14} fill={i <= rev.rating ? "currentColor" : "none"} />
+                      ))}
+                    </div>
+                    {rev.comment && <p className="text-sm text-foreground whitespace-pre-wrap">{rev.comment}</p>}
+                  </Card>
+                ))
+              )}
+            </div>
           </section>
         </div>
       </div>
