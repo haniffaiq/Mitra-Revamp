@@ -23,6 +23,19 @@ export interface ClientMerchant {
   packages: ClientMerchantPackage[];
   minPrice: number;
   maxPrice: number;
+  reviewAverage?: number | null;
+  reviewCount?: number;
+}
+
+export interface ClientMerchantReview {
+  id: string;
+  merchantId: string;
+  reviewerName: string;
+  rating: number;
+  comment?: string | null;
+  status: string;
+  isVerifiedMitra: boolean;
+  createdAt: string;
 }
 
 export interface ClientInsightArticle {

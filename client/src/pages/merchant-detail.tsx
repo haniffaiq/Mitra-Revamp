@@ -101,9 +101,11 @@ export default function MerchantDetail() {
     image: merchant.logoUrl,
     category: merchant.category,
     brand: { "@type": "Brand", name: merchant.name },
-    aggregateRating: merchant.rating
-      ? { "@type": "AggregateRating", ratingValue: merchant.rating, ratingCount: 1, bestRating: 5 }
-      : undefined,
+    aggregateRating: (merchant.reviewCount && merchant.reviewCount > 0)
+      ? { "@type": "AggregateRating", ratingValue: merchant.reviewAverage ?? merchant.rating ?? 5, ratingCount: merchant.reviewCount, bestRating: 5 }
+      : merchant.rating
+        ? { "@type": "AggregateRating", ratingValue: merchant.rating, ratingCount: 1, bestRating: 5 }
+        : undefined,
     offers: {
       "@type": "AggregateOffer",
       priceCurrency: "IDR",
